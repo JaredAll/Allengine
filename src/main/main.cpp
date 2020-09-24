@@ -1,5 +1,7 @@
 #include "engine.h"
+#include <cmath>
 #include <memory>
+#include "vector2.h"
 
 int main( int argc, char* argv[] )
 {
@@ -8,7 +10,9 @@ int main( int argc, char* argv[] )
   int height = 1000;
   int width = 1000;
 
-  engine -> initialize( height, width );
+  std::unique_ptr<Vector2> first_vector2 = std::make_unique<Vector2>( 100, M_PI / 3 );
 
-  engine -> quit();
+  std::cout << first_vector2 -> get_x_component() << std::endl;
+
+  return 0;
 }
