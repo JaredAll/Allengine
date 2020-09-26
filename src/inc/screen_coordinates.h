@@ -8,13 +8,16 @@ class ScreenCoordinates
 {
 public:
 
-  ScreenCoordinates( int x, int y );
+  ScreenCoordinates( int x, int y, bool visible );
 
   Point& get_location();
+
+  bool is_visible() const;
   
 private:
 
   std::unique_ptr<Point> location;
+  bool visible;
   
 };
 
