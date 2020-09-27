@@ -13,15 +13,15 @@ ScreenWindow::ScreenWindow( unique_ptr<WorldCoordinates> upper_left_corner_param
   lower_right_corner = move( lower_right_corner_param );
 }
 
-unique_ptr<ScreenCoordinates> ScreenWindow::project( WorldCoordinates& coordinates )
+unique_ptr<ScreenCoordinates> ScreenWindow::project( WorldCoordinates const& coordinates )
 {
-  int upper_left_x = upper_left_corner -> get_location().get_x();
-  int lower_right_x = lower_right_corner -> get_location().get_x();
-  int input_x = coordinates.get_location().get_x();
+  int upper_left_x = upper_left_corner -> get_world_x();
+  int lower_right_x = lower_right_corner -> get_world_x();
+  int input_x = coordinates.get_world_x();
 
-  int upper_left_y = upper_left_corner -> get_location().get_y();
-  int lower_right_y = lower_right_corner -> get_location().get_y();
-  int input_y = coordinates.get_location().get_y();
+  int upper_left_y = upper_left_corner -> get_world_y();
+  int lower_right_y = lower_right_corner -> get_world_y();
+  int input_y = coordinates.get_world_y();
 
   bool visible = input_x >= upper_left_x && input_x <= lower_right_x
     && input_y >= upper_left_y && input_y <= lower_right_y;
@@ -31,8 +31,8 @@ unique_ptr<ScreenCoordinates> ScreenWindow::project( WorldCoordinates& coordinat
 
   if( visible )
   {
-    int input_screen_projection_x = input_x - ( ( upper_left_x + lower_right_x ) / 2 );
-    int input_screen_projection_y = input_y - ( ( upper_left_y + lower_right_y ) / 2 );
+    input_screen_projection_x = input_x - upper_left_x;
+    input_screen_projection_y = input_y - upper_left_y;
   }
 
   return make_unique<ScreenCoordinates>(

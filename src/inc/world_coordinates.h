@@ -10,11 +10,18 @@ public:
 
   WorldCoordinates( int x, int y );
 
-  Point& get_location();
-  
+  int get_world_x() const;
+
+  int get_world_y() const;
+
+  std::unique_ptr<WorldCoordinates> operator+( WorldCoordinates const& other ) const;
+
+  friend std::ostream& operator<<( std::ostream& os, const WorldCoordinates& coordinates );
+
 private:
 
-  std::unique_ptr<Point> location;
+  int x;
+  int y;
   
 };
 

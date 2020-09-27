@@ -12,7 +12,7 @@ public:
   ScreenWindow( std::unique_ptr<WorldCoordinates> upper_left_corner,
                 std::unique_ptr<WorldCoordinates> lower_right_corner );
 
-  std::unique_ptr<ScreenCoordinates> project( WorldCoordinates& coordinates );
+  std::unique_ptr<ScreenCoordinates> project( WorldCoordinates const& coordinates );
 
 private:
 

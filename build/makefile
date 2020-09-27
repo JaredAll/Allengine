@@ -5,7 +5,7 @@ CXX_FLAGS = -Werror -pedantic-errors -O0 -Wno-c++98-compat-pedantic -Wno-padded 
 LINKER_FLAGS = -L/usr/local/lib -lSDL2 -lSDL2_image -lSDL2_ttf -lpthread
 OBJ_FILES = engine.o game_renderer.o easy_sdl.o sprite.o point.o input_event.o input_handler.o \
 vector2.o world_coordinates.o screen_coordinates.o screen_window.o
-TEST_OBJ_FILES = test_driver.o vector2_test.o
+TEST_OBJ_FILES = test_driver.o vector2_test.o physics_ball.o physics_ball_test.o
 VPATH = ../src/main:../src/main/input:../src/main/physics:../test/main
 
 all: Allengine tests cscope

@@ -10,13 +10,18 @@ public:
 
   ScreenCoordinates( int x, int y, bool visible );
 
-  Point& get_location();
+  int get_screen_x() const;
+
+  int get_screen_y () const;
 
   bool is_visible() const;
+
+  friend std::ostream& operator<<( std::ostream& os, const ScreenCoordinates& coordinates );
   
 private:
 
-  std::unique_ptr<Point> location;
+  int x;
+  int y;
   bool visible;
   
 };

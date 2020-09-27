@@ -68,10 +68,13 @@ private:
   template< typename T >
   void render_component( const T& renderComponent )
   {
-    renderTexture( renderComponent.getTexture().get(),
-                   renderer.get(),
-                   renderComponent.getDestination().get(),
-                   renderComponent.getClip().get() );  
+    if( renderComponent.get_screen_location().is_visible() )
+    {
+      renderTexture( renderComponent.getTexture().get(),
+                     renderer.get(),
+                     renderComponent.getDestination().get(),
+                     renderComponent.getClip().get() );  
+    }
   }
 
   std::unique_ptr<SDL_Window, SDL_Window_Destroyer> window;

@@ -5,13 +5,19 @@
 #include "SDL_render.h"
 #include "cleanup.h"
 #include "render_component.h"
+#include "screen_coordinates.h"
 #include "sprite_config.h"
+#include "world_coordinates.h"
+#include <memory>
 
 class Sprite: public RenderComponent
 {
 public:
   
-  Sprite( int x, int y, int h, int w, std::shared_ptr<SDL_Texture> texture );
+  Sprite( std::unique_ptr<WorldCoordinates> world_offset,
+          int h,
+          int w, 
+          std::shared_ptr<SDL_Texture> texture );
 
   ~Sprite();
 
@@ -25,22 +31,22 @@ public:
   
   void set_destination( std::shared_ptr<SDL_Rect> destination );
   
-  int get_x();
-  
-  int get_y();
-
   int get_h();
   
   int get_w();
-  
-  void set_x( int x );
-  
-  void set_y( int y );
-  
-  void calculate_destination();
+
+  WorldCoordinates const& get_world_offset() const;
+
+  ScreenCoordinates const& get_screen_location() const;
+
+  void set_world_offset( int x, int y );
+
+  void set_screen_location( std::unique_ptr<ScreenCoordinates> screen_location );
 
 private:
-  
+
+  std::unique_ptr<WorldCoordinates> world_offset;
+  std::unique_ptr<ScreenCoordinates> screen_location;
   std::shared_ptr<SDL_Texture> texture;
   std::shared_ptr<SDL_Rect> destination;
   std::shared_ptr<SDL_Rect> clip;

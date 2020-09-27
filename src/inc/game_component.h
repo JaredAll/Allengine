@@ -18,9 +18,24 @@ public:
 
   virtual ~GameComponent() = default;
 
+  void set_location( std::unique_ptr<WorldCoordinates> location_param )
+  {
+    location = move( location_param );
+  }
+
+  WorldCoordinates const& get_location() const
+  {
+    return *location;
+  }
+
 protected:
 
   GameComponent(){}
+
+private:
+
+  std::unique_ptr<WorldCoordinates> location;
+  
 };
 
 #endif
