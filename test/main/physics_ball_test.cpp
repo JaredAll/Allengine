@@ -42,21 +42,19 @@ TEST_CASE( "world to screen projection successful" )
   vector<unique_ptr<PhysicsBall>> game_components;
   game_components.push_back( move( ball ) );
 
-  while( true )
+  bool visible = true;
+  while( visible )
   {
     for( auto& component : game_components )
     {
       for( auto& render_component : component -> get_render_components() )
       {
-        std::cout << component -> get_location() << std::endl;
-
         unique_ptr<ScreenCoordinates> screen_location = screen_window -> project( 
             *( render_component -> get_world_offset() +
                component -> get_location() )
           );
 
-        std::cout << *screen_location << std::endl;
-        std::cout << std::endl;
+        visible = screen_location -> is_visible();
 
         render_component -> set_screen_location(
           move( screen_location )
