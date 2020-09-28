@@ -8,7 +8,7 @@ using std::unique_ptr;
 using std::vector;
 
 PhysicsBall::PhysicsBall( unique_ptr<WorldCoordinates> location_param,
-                          unique_ptr<Sprite> ball_sprite_param ) : GameComponent()
+                          unique_ptr<Sprite> ball_sprite_param ) : TestComponent()
 {
   set_location( move( location_param ) );
   render_components.push_back( move ( ball_sprite_param ) );

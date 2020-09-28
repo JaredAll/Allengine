@@ -1,6 +1,7 @@
 #include "screen_window.h"
 #include "world_coordinates.h"
 #include <memory>
+#include <iostream>
 
 using std::unique_ptr;
 using std::make_unique;
@@ -39,4 +40,31 @@ unique_ptr<ScreenCoordinates> ScreenWindow::project( WorldCoordinates const& coo
     input_screen_projection_x,
     input_screen_projection_y,
     visible );
+}
+
+void ScreenWindow::scroll_x( int displacement )
+{
+  unique_ptr<WorldCoordinates> scroll_offset = make_unique<WorldCoordinates>( displacement, 0 );
+
+  upper_left_corner = *upper_left_corner + *scroll_offset;
+  lower_right_corner = *lower_right_corner + *scroll_offset;
+}
+
+void ScreenWindow::update()
+{
+  scroll_x( 10 );
+}
+
+void ScreenWindow::update( InputEvent& event)
+{
+}
+
+bool ScreenWindow::accepting_input()
+{
+  return false;
+}
+
+std::vector<std::unique_ptr<Sprite>>& ScreenWindow::get_render_components()
+{
+  return render_components;
 }

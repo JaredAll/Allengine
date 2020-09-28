@@ -1,10 +1,10 @@
 #ifndef PHYSICS_BALL
 #define PHYSICS_BALL
 
-#include "game_component.h"
+#include "test_component.h"
 #include "sprite.h"
 
-class PhysicsBall : public GameComponent
+class PhysicsBall : public TestComponent
 {
 public:
 
