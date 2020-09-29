@@ -116,5 +116,38 @@ TEST_CASE( "world to screen projection successful" )
       }
       engine -> advance( game_components );        
     }
+    
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_x() == 510 );
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_y() == 510 );
+  }
+
+  SECTION( "screen window shifts left" )
+  {
+    window.on_update( [&]{ window.scroll_x( -10 ); } );
+
+    bool visible = true;
+    while( visible )
+    {
+      for( auto& component : game_components )
+      {
+        for( auto& render_component : component -> get_render_components() )
+        {
+          unique_ptr<ScreenCoordinates> screen_location = window.project( 
+            *( render_component -> get_world_offset() +
+               component -> get_location() )
+            );
+
+          visible = screen_location -> is_visible();
+
+          render_component -> set_screen_location(
+            move( screen_location )
+            );
+        }
+      }
+      engine -> advance( game_components );        
+    }
+    
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_x() == 0 );
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_y() == 0 );
   } 
 }
