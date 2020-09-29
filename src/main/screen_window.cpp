@@ -50,11 +50,6 @@ void ScreenWindow::scroll_x( int displacement )
   lower_right_corner = *lower_right_corner + *scroll_offset;
 }
 
-void ScreenWindow::update()
-{
-  scroll_x( 10 );
-}
-
 void ScreenWindow::update( InputEvent& event)
 {
 }

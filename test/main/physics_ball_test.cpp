@@ -10,6 +10,18 @@ using std::unique_ptr;
 using std::make_unique;
 using std::vector;
 
+void shift_ball_x_y( PhysicsBall& ball_handle, int x, int y )
+{
+  int new_location_x = ball_handle.get_location().get_world_x() + 10;
+  int new_location_y = ball_handle.get_location().get_world_y() + 10;
+
+  ball_handle.set_location(
+    make_unique<WorldCoordinates>(
+      new_location_x,
+      new_location_y )
+    );
+}
+
 TEST_CASE( "world to screen projection successful" )
 {
   int width = 500;
@@ -32,6 +44,8 @@ TEST_CASE( "world to screen projection successful" )
     move( ball_sprite )
     );
 
+  PhysicsBall& ball_handle = *ball;
+
   vector<unique_ptr<TestComponent>> game_components;
   game_components.push_back( move( ball ) );
 
@@ -43,8 +57,13 @@ TEST_CASE( "world to screen projection successful" )
     move( lower_right_corner )
     );
 
+  ScreenWindow& window = *screen_window;
+  game_components.push_back( move( screen_window ) );
+
   SECTION( "physics ball moves in world" )
   {
+    ball_handle.on_update( [&]{ shift_ball_x_y( ball_handle, 10, 10 ); } );
+
     bool visible = true;
     while( visible )
     {
@@ -52,7 +71,7 @@ TEST_CASE( "world to screen projection successful" )
       {
         for( auto& render_component : component -> get_render_components() )
         {
-          unique_ptr<ScreenCoordinates> screen_location = screen_window -> project( 
+          unique_ptr<ScreenCoordinates> screen_location = window.project( 
             *( render_component -> get_world_offset() +
                component -> get_location() )
             );
@@ -73,9 +92,8 @@ TEST_CASE( "world to screen projection successful" )
 
   SECTION( "physics ball and screen window both move" )
   {
-    ScreenWindow& window = *screen_window;
-
-    game_components.push_back( move( screen_window ) );
+    ball_handle.on_update( [&]{ shift_ball_x_y( ball_handle, 10, 10 ); } );
+    window.on_update( [&]{ window.scroll_x( 10 ); } );
 
     bool visible = true;
     while( visible )

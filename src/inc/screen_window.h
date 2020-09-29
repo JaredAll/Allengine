@@ -3,6 +3,7 @@
 
 #include "world_coordinates.h"
 #include "screen_coordinates.h"
+#include <functional>
 #include <memory>
 #include "test_component.h"
 
@@ -16,8 +17,6 @@ public:
   std::unique_ptr<ScreenCoordinates> project( WorldCoordinates const& coordinates );
 
   void scroll_x( int displacement );
-
-  void update();
 
   void update( InputEvent& event );
 
