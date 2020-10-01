@@ -12,8 +12,8 @@ using std::vector;
 
 void shift_ball_x_y( PhysicsBall& ball_handle, int x, int y )
 {
-  int new_location_x = ball_handle.get_location().get_world_x() + 10;
-  int new_location_y = ball_handle.get_location().get_world_y() + 10;
+  int new_location_x = ball_handle.get_location().get_world_x() + x;
+  int new_location_y = ball_handle.get_location().get_world_y() + y;
 
   ball_handle.set_location(
     make_unique<WorldCoordinates>(
@@ -132,6 +132,54 @@ TEST_CASE( "world to screen projection successful" )
       {
         for( auto& render_component : component -> get_render_components() )
         {
+          unique_ptr<ScreenCoordinates> screen_location = window.project(
+            *( render_component -> get_world_offset() +
+               component -> get_location() )
+            );
+
+          visible = screen_location -> is_visible();
+
+          render_component -> set_screen_location(
+            move( screen_location )
+            );
+        }
+      }
+      engine -> advance( game_components );
+    }
+    
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_x() == 0 );
+    REQUIRE( game_components.at( 0 ) -> get_location().get_world_y() == 0 );
+  }
+
+  SECTION( "screen window shifts left and first ball shift left, second ball stationary" )
+  {
+    unique_ptr<Sprite> ball_sprite_2 = make_unique<Sprite>(
+    make_unique<WorldCoordinates>( 0, 0 ),
+    10,
+    10,
+    renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
+    );
+
+    unique_ptr<PhysicsBall> ball_2 = make_unique<PhysicsBall>(
+      make_unique<WorldCoordinates>( 0, 100 ),
+      move( ball_sprite_2 )
+      );
+
+    PhysicsBall& ball_2_handle = *ball_2;
+
+    game_components.push_back( move( ball_2 ) );
+
+    window.on_update( [&]{ window.scroll_x( 3 ); } );
+    ball_handle.on_update( [&]{ shift_ball_x_y( ball_handle, 10, 1 ); } );
+    ball_2_handle.on_update( [&]{ shift_ball_x_y( ball_2_handle, 8, 6 ); } );
+
+    bool visible = true;
+    while( visible )
+    {
+      for( auto& component : game_components )
+      {
+        for( auto& render_component : component -> get_render_components() )
+        {
           unique_ptr<ScreenCoordinates> screen_location = window.project( 
             *( render_component -> get_world_offset() +
                component -> get_location() )
@@ -146,8 +194,5 @@ TEST_CASE( "world to screen projection successful" )
       }
       engine -> advance( game_components );        
     }
-    
-    REQUIRE( game_components.at( 0 ) -> get_location().get_world_x() == 0 );
-    REQUIRE( game_components.at( 0 ) -> get_location().get_world_y() == 0 );
   } 
 }
