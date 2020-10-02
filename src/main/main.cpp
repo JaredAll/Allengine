@@ -13,7 +13,7 @@ int main( int argc, char* argv[] )
   std::unique_ptr<Vector2> first_vector2 = std::make_unique<Vector2>( 100, M_PI / 4 );
   std::unique_ptr<Vector2> second_vector2 = std::make_unique<Vector2>( 50, M_PI / 4 );
 
-  std::unique_ptr<Vector2> third = first_vector2 -> add( *second_vector2 );
+  std::unique_ptr<Vector2> third = *first_vector2 + ( *second_vector2 );
 
   std::cout << third -> get_x_component() << std::endl;
   std::cout << third -> get_y_component() << std::endl;

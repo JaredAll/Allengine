@@ -2,6 +2,7 @@
 #include "vector2.h"
 #include <cmath>
 #include <iostream>
+#include "vector_qualities.h"
 
 #define EPSILON 0.0001
 
@@ -19,10 +20,10 @@ TEST_CASE( "add vectors with equivalent angles" )
   {
     float theta = M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, theta );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, theta );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, theta );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, theta );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta(); 
 
@@ -34,10 +35,10 @@ TEST_CASE( "add vectors with equivalent angles" )
   {
     float theta = 3 * M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, theta );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, theta );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, theta );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, theta );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta(); 
 
@@ -49,10 +50,10 @@ TEST_CASE( "add vectors with equivalent angles" )
   {
     float theta = 5 * M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, theta );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, theta );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, theta );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, theta );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta(); 
 
@@ -64,11 +65,11 @@ TEST_CASE( "add vectors with equivalent angles" )
   {
     float theta = 7 * M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, theta );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, theta );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, theta );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, theta );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta(); 
 
     REQUIRE( withinEpsilon( result_theta, theta ) );
@@ -79,10 +80,10 @@ TEST_CASE( "add vectors with equivalent angles" )
   {
     float theta = M_PI;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, theta );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, theta );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, theta );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, theta );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta(); 
 
@@ -98,10 +99,10 @@ TEST_CASE( "add vectors with supplementary angles" )
     float pi_over_two = M_PI / 2;
     float three_pi_over_two = 3 * M_PI / 2;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, pi_over_two );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, three_pi_over_two );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, pi_over_two );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, three_pi_over_two );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta();
     float result_x_component = result -> get_x_component();
@@ -118,11 +119,11 @@ TEST_CASE( "add vectors with supplementary angles" )
     float pi_over_two = M_PI / 2;
     float three_pi_over_two = 3 * M_PI / 2;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 50, pi_over_two );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 100, three_pi_over_two );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 50, pi_over_two );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 100, three_pi_over_two );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
     float result_x_component = result -> get_x_component();
     float result_y_component = result -> get_y_component();
@@ -138,11 +139,11 @@ TEST_CASE( "add vectors with supplementary angles" )
     float pi_over_four = M_PI / 4;
     float five_pi_over_four = 5 * M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, pi_over_four );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 50, five_pi_over_four );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, pi_over_four );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 50, five_pi_over_four );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( pi_over_four, result_theta ) );
@@ -154,11 +155,11 @@ TEST_CASE( "add vectors with supplementary angles" )
     float pi_over_four = M_PI / 4;
     float five_pi_over_four = 5 * M_PI / 4;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 50, pi_over_four );
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 100, five_pi_over_four );
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 50, pi_over_four );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 100, five_pi_over_four );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( five_pi_over_four, result_theta ) );
@@ -169,15 +170,15 @@ TEST_CASE( "add vectors with supplementary angles" )
 TEST_CASE( "first quadrant vector" )
 {
   float pi_over_three = M_PI / 3;
-  unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 9, pi_over_three );
+  unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 9, pi_over_three );
 
   SECTION( "plus a first quadrant vector" )
   {
     float pi_over_six = M_PI / 6;
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 11, pi_over_six );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 11, pi_over_six );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 19.3254 ) );
@@ -187,10 +188,10 @@ TEST_CASE( "first quadrant vector" )
   SECTION( "plus a second quadrant vector" )
   {
     float five_pi_over_six = 5 * M_PI / 6;
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 11, five_pi_over_six );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 11, five_pi_over_six );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 14.2126 ) );
@@ -200,10 +201,10 @@ TEST_CASE( "first quadrant vector" )
   SECTION( "plus a third quadrant vector" )
   {
     float seven_pi_over_six = 7 * M_PI / 6;
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 11, seven_pi_over_six );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 11, seven_pi_over_six );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 5.5251 ) );
@@ -213,10 +214,10 @@ TEST_CASE( "first quadrant vector" )
   SECTION( "plus a fourth quadrant vector" )
   {
     float eleven_pi_over_six = 11 * M_PI / 6;
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 11, eleven_pi_over_six );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 11, eleven_pi_over_six );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 14.2126 ) );
@@ -227,16 +228,16 @@ TEST_CASE( "first quadrant vector" )
 TEST_CASE( "a second quadrant vector" )
 {
   float three_pi_over_four = 3 * M_PI / 4;
-  unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 5, three_pi_over_four );
+  unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 5, three_pi_over_four );
 
   SECTION( "plus a second quadrant vector" )
   {
     float two_pi_over_three = 2 * M_PI / 3;
 
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 7, two_pi_over_three );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 7, two_pi_over_three );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 11.9002 ) );
@@ -247,10 +248,10 @@ TEST_CASE( "a second quadrant vector" )
   {
     float four_pi_over_three = 4 * M_PI / 3;
 
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 7, four_pi_over_three );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 7, four_pi_over_three );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 7.4754 ) );
@@ -261,9 +262,9 @@ TEST_CASE( "a second quadrant vector" )
   {
     float five_pi_over_three = 5 * M_PI / 3;
 
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 7, five_pi_over_three );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 7, five_pi_over_three );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
     
     float result_theta = result -> get_theta();
 
@@ -275,16 +276,16 @@ TEST_CASE( "a second quadrant vector" )
 TEST_CASE( "a third quadrant vector" )
 {
   float seven_pi_over_six = 7 * M_PI / 6;
-  unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 100, seven_pi_over_six );
+  unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 100, seven_pi_over_six );
 
   SECTION( "plus a third quadrant vector" )
   {
     float five_pi_over_four = 5 * M_PI / 4;
 
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 200, five_pi_over_four );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 200, five_pi_over_four );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 297.7197 ) );
@@ -295,10 +296,10 @@ TEST_CASE( "a third quadrant vector" )
   {
     float seven_pi_over_four = 7 * M_PI / 4;
 
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 200, seven_pi_over_four );
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 200, seven_pi_over_four );
 
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
-
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
+    
     float result_theta = result -> get_theta();
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 199.1161 ) );
@@ -313,10 +314,10 @@ TEST_CASE( "a fourth quadrant vector" )
     float seven_pi_over_four = 7 * M_PI / 4;
     float eleven_pi_over_six = 11 * M_PI / 6;
 
-    unique_ptr<Vector2> first_vector2 = make_unique<Vector2>( 10, seven_pi_over_four );    
-    unique_ptr<Vector2> second_vector2 = make_unique<Vector2>( 20, eleven_pi_over_six );
-
-    unique_ptr<Vector2> result = first_vector2 -> add( *second_vector2 );    
+    unique_ptr<Vector2<Force>> first_vector2 = make_unique<Vector2<Force>>( 10, seven_pi_over_four );    
+    unique_ptr<Vector2<Force>> second_vector2 = make_unique<Vector2<Force>>( 20, eleven_pi_over_six );
+    
+    unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     REQUIRE( withinEpsilon( result -> get_magnitude(), 29.7719 ) );
     REQUIRE( withinEpsilon( result -> get_theta(), 5.6725 ) );

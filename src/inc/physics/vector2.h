@@ -2,27 +2,66 @@
 #define JAREDALL_ALLENGINE_VECTOR2
 
 #include <memory>
+#include <cmath>
+#include <iostream>
+#include <utility>
 
+#define EPSILON 0.0001
+
+
+template<typename Quality>
 class Vector2
 {
 public:
 
-  Vector2( float param_magnitude, float param_theta );
+  Vector2( float param_magnitude, float param_theta )
+    : magnitude( param_magnitude )
+  {
+    theta = param_theta < 0 ? param_theta + 2 * M_PI : param_theta;
+    quality = Quality{};
+  }
 
-  float get_x_component() const;
+  float get_x_component() const
+  {
+    return magnitude * cos( theta );
+  }
 
-  float get_y_component() const;
+  float get_y_component() const
+  {
+    return magnitude * sin( theta );
+  }
 
-  float get_magnitude() const;
+  float get_magnitude() const
+  {
+    return magnitude;
+  }
 
-  float get_theta() const;
+  float get_theta() const
+  {
+    return theta;
+  }
 
-  std::unique_ptr<Vector2> add( Vector2 const& vector );
+  Quality get_quality() const
+  {
+    return quality;
+  }
+
+  std::unique_ptr<Vector2<Quality>> operator+( Vector2<Quality> const& vector ) const
+  {
+    float new_x_component = this -> get_x_component() + vector.get_x_component();
+    float new_y_component = this -> get_y_component() + vector.get_y_component();
+
+    float new_magnitude = sqrt( pow( new_x_component, 2 ) + pow( new_y_component, 2 ) );
+    float new_theta = std::atan2( new_y_component, new_x_component );
+
+    return move( std::make_unique<Vector2>( new_magnitude, new_theta ) );
+  }    
 
 private:
 
   float magnitude;
   float theta;
+  Quality quality;
 
 };
 
