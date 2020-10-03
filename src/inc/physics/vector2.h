@@ -5,6 +5,7 @@
 #include <cmath>
 #include <iostream>
 #include <utility>
+#include "vector_qualities.h"
 
 #define EPSILON 0.0001
 
@@ -18,6 +19,13 @@ public:
     : magnitude( param_magnitude )
   {
     theta = param_theta < 0 ? param_theta + 2 * M_PI : param_theta;
+    quality = Quality{};
+  }
+
+  Vector2( Vector2<Quality> const& other )
+  {
+    theta = other.get_theta() < 0 ? other.get_theta() + 2 * M_PI : other.get_theta();
+    magnitude = other.get_magnitude();
     quality = Quality{};
   }
 
@@ -55,7 +63,13 @@ public:
     float new_theta = std::atan2( new_y_component, new_x_component );
 
     return move( std::make_unique<Vector2>( new_magnitude, new_theta ) );
-  }    
+  }
+
+  bool operator==( Vector2<Quality> const& other )
+  {
+    return ( std::abs( magnitude - other.get_magnitude() ) < EPSILON )
+      && ( std::abs( theta - other.get_theta() ) < EPSILON );
+  }
 
 private:
 
