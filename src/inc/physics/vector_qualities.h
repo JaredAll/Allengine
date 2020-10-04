@@ -8,26 +8,29 @@ struct IsIntegratableT : std::false_type
 {};
 
 template< typename T>
-struct IsIntegratableT< T, std::void_t< decltype( T::Integration )>>
+struct IsIntegratableT< T, std::void_t< decltype( std::declval<T>().get_integration())>>
   : std::true_type
-{};
+{
+  bool value = true;
+};
 
 struct Displacement
 {
 };
 
-struct Force
-{
-};
-
 struct Velocity
 {
-  using Integration = Displacement;
+  Displacement get_integration();
 };
 
 struct Acceleration
 {
-  using Integration = Velocity;
+  Velocity get_integration();
+};
+
+struct Force
+{
+  Velocity get_integration();
 };
 
 #endif
