@@ -80,8 +80,7 @@ private:
 };
 
 template<typename Quality>
-class Vector2<Quality, std::enable_if< IsIntegratableT<Quality>::value,
-                                       decltype( std::declval<Quality>().get_integration() )>>
+class Vector2<Quality, std::enable_if_t<IsIntegratableT<Quality>{}>>
 {
 public:
 
@@ -148,9 +147,11 @@ public:
 
 private:
 
-  std::unique_ptr<Vector2< decltype( std::declval<Quality>().get_integration() )>>
+  std::unique_ptr<Vector2< typename Quality::Integration >>
   integrate_implementation( float delta_t, std::true_type )
   {
+    using Integration = typename Quality::Integration;
+    return std::make_unique<Vector2<Integration>>( 0, 0 );
   }
 
   float magnitude;

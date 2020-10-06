@@ -32,7 +32,7 @@ void PhysicsComponent::remove( unique_ptr<Force_v> force )
     }
   }
   
-  forces = new_forces;
+  forces = move( new_forces );
 }
 
 unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
@@ -40,8 +40,10 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   unique_ptr<Force_v> sum_forces = make_unique<Force_v>( 0, 0 );
   for( auto& current_force : forces )
   {
-    sum_forces = *sum_forces + *current_force;
+    sum_forces = move( *sum_forces + *current_force );
   }
 
-  velocity = sum_forces -> integrate( delta_t );
+  velocity = move( sum_forces -> integrate( delta_t ) );
+
+  return nullptr;
 }
