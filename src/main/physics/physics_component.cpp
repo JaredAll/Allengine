@@ -13,6 +13,7 @@ using Displacement_v = Vector2<Displacement>;
 PhysicsComponent::PhysicsComponent( float param_mass )
   : mass( param_mass )
 {
+  velocity = make_unique<Velocity_v>( 0, 0 );
 }
 
 void PhysicsComponent::consider( unique_ptr<Force_v> force )
@@ -49,5 +50,10 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   unique_ptr<Displacement_v> velocity_displacement = velocity -> integrate( delta_t, 1 );
   unique_ptr<Displacement_v> acceleration_displacement = acceleration -> integrate( delta_t, 2 );
 
-  return move( *velocity_displacement + *acceleration_displacement );
+  unique_ptr<Displacement_v> displacement = *velocity_displacement + *acceleration_displacement;
+
+  velocity = make_unique<Velocity_v>( displacement -> get_magnitude() / delta_t,
+                                      displacement -> get_theta() );
+
+  return move( displacement );
 }
