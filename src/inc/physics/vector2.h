@@ -29,14 +29,24 @@ public:
     quality = Quality{};
   }
 
-  float get_x_component() const
+  float get_x_component_magnitude() const
   {
     return magnitude * cos( theta );
   }
 
-  float get_y_component() const
+  float get_y_component_magnitude() const
   {
     return magnitude * sin( theta );
+  }
+
+  auto get_x_component() const
+  {
+    return std::make_unique<Vector2<Quality>>( get_x_component_magnitude(), 0 );
+  }
+
+  auto get_y_component() const
+  {
+    return std::make_unique<Vector2<Quality>>( get_y_component_magnitude(), M_PI_2 );
   }
 
   float get_magnitude() const
@@ -56,8 +66,11 @@ public:
 
   std::unique_ptr<Vector2<Quality>> operator+( Vector2<Quality> const& vector ) const
   {
-    float new_x_component = this -> get_x_component() + vector.get_x_component();
-    float new_y_component = this -> get_y_component() + vector.get_y_component();
+    float new_x_component = this ->
+      get_x_component_magnitude() + vector.get_x_component_magnitude();
+    
+    float new_y_component = this ->
+      get_y_component_magnitude() + vector.get_y_component_magnitude();
 
     float new_magnitude = sqrt( pow( new_x_component, 2 ) + pow( new_y_component, 2 ) );
     float new_theta = std::atan2( new_y_component, new_x_component );
@@ -98,14 +111,24 @@ public:
     quality = Quality{};
   }
 
-  float get_x_component() const
+  float get_x_component_magnitude() const
   {
     return magnitude * cos( theta );
   }
 
-  float get_y_component() const
+  float get_y_component_magnitude() const
   {
     return magnitude * sin( theta );
+  }
+
+  auto get_x_component() const
+  {
+    return std::make_unique<Vector2<Quality>>( get_x_component_magnitude(), 0 );
+  }
+
+  auto get_y_component() const
+  {
+    return std::make_unique<Vector2<Quality>>( get_y_component_magnitude(), M_PI_2 );
   }
 
   float get_magnitude() const
@@ -125,13 +148,21 @@ public:
 
   std::unique_ptr<Vector2<Quality>> operator+( Vector2<Quality> const& vector ) const
   {
-    float new_x_component = this -> get_x_component() + vector.get_x_component();
-    float new_y_component = this -> get_y_component() + vector.get_y_component();
+    float new_x_component = this ->
+      get_x_component_magnitude() + vector.get_x_component_magnitude();
+    
+    float new_y_component = this ->
+      get_y_component_magnitude() + vector.get_y_component_magnitude();
 
     float new_magnitude = sqrt( pow( new_x_component, 2 ) + pow( new_y_component, 2 ) );
     float new_theta = std::atan2( new_y_component, new_x_component );
 
-    return move( std::make_unique<Vector2>( new_magnitude, new_theta ) );
+    return move( std::make_unique<Vector2<Quality>>( new_magnitude, new_theta ) );
+  }
+
+  std::unique_ptr<Vector2<Quality>> operator*( float scalar ) const
+  {
+    return move( std::make_unique<Vector2<Quality>>( magnitude * scalar, theta ) );
   }
 
   bool operator==( Vector2<Quality> const& other )
@@ -140,19 +171,26 @@ public:
       && ( std::abs( theta - other.get_theta() ) < EPSILON );
   }
 
-  auto integrate( float delta_t )
+  auto integrate( float delta_t, int divisor )
   {
-    return integrate_implementation( delta_t, IsIntegratableT<Quality>{} );
+    using Integration = typename Quality::Integration;
+
+    std::unique_ptr<Vector2<Integration>> integrated_x_component =
+      std::make_unique<Vector2<Integration>>(
+        get_x_component_magnitude() * ( delta_t / divisor ),
+        0 );
+
+    std::unique_ptr<Vector2<Integration>> integrated_y_component =
+      std::make_unique<Vector2<Integration>>( 
+        get_y_component_magnitude() * ( delta_t / divisor ), 
+        M_PI_2 );
+
+    return move(
+      *integrated_x_component + *integrated_y_component
+      );
   }
 
 private:
-
-  std::unique_ptr<Vector2< typename Quality::Integration >>
-  integrate_implementation( float delta_t, std::true_type )
-  {
-    using Integration = typename Quality::Integration;
-    return std::make_unique<Vector2<Integration>>( 0, 0 );
-  }
 
   float magnitude;
   float theta;

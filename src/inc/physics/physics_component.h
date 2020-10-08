@@ -8,7 +8,8 @@
 
 class PhysicsComponent
 {
-
+public:
+  
   PhysicsComponent( float mass );
 
   void consider( std::unique_ptr<Vector2<Force>> force );

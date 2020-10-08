@@ -105,8 +105,8 @@ TEST_CASE( "add vectors with supplementary angles" )
     unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
 
     float result_theta = result -> get_theta();
-    float result_x_component = result -> get_x_component();
-    float result_y_component = result -> get_y_component();
+    float result_x_component = result -> get_x_component_magnitude();
+    float result_y_component = result -> get_y_component_magnitude();
 
     REQUIRE( withinEpsilon( result_x_component, 0 ) );
     REQUIRE( withinEpsilon( result_y_component, 50 ) );
@@ -125,8 +125,8 @@ TEST_CASE( "add vectors with supplementary angles" )
     unique_ptr<Vector2<Force>> result = *first_vector2 + ( *second_vector2 );
     
     float result_theta = result -> get_theta();
-    float result_x_component = result -> get_x_component();
-    float result_y_component = result -> get_y_component();
+    float result_x_component = result -> get_x_component_magnitude();
+    float result_y_component = result -> get_y_component_magnitude();
 
     REQUIRE( withinEpsilon( result_x_component, 0 ) );
     REQUIRE( withinEpsilon( result_y_component, -1 * 50 ) );

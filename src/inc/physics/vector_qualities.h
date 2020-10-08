@@ -23,7 +23,7 @@ struct Velocity
 
 struct Acceleration
 {
-  using Integration = Velocity;
+  using Integration = Displacement;
 };
 
 struct Force
