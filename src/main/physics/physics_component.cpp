@@ -48,7 +48,7 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
                                               sum_forces -> get_theta() );
 
   unique_ptr<Displacement_v> velocity_displacement = velocity -> integrate( delta_t, 1 );
-  unique_ptr<Displacement_v> acceleration_displacement = acceleration -> integrate( delta_t, 2 );
+  unique_ptr<Displacement_v> acceleration_displacement = acceleration -> integrate_2( delta_t );
 
   unique_ptr<Displacement_v> displacement = *velocity_displacement + *acceleration_displacement;
 

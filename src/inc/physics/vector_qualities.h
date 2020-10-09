@@ -12,6 +12,15 @@ struct IsIntegratableT< T, std::void_t< typename T::Integration >>
   : std::true_type
 {};
 
+template< typename, typename = std::void_t<>>
+struct IsTwiceIntegratableT : std::false_type
+{};
+
+template< typename T >
+struct IsTwiceIntegratableT< T, std::void_t< typename T::Integration, typename T::Integration2 > >
+: std::true_type
+{};
+
 struct Displacement
 {
 };
@@ -23,7 +32,8 @@ struct Velocity
 
 struct Acceleration
 {
-  using Integration = Displacement;
+  using Integration = Velocity;
+  using Integration2 = Displacement;
 };
 
 struct Force

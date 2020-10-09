@@ -146,7 +146,7 @@ TEST_CASE( "world to screen projection successful" )
     run_while_visible( game_components, window, engine );
   }
 
-  SECTION( "First physics component test" )
+  SECTION( "First physics component test: gravity" )
   {
     float ball_mass = 10;
     float time_elapsed = 0;
@@ -157,6 +157,64 @@ TEST_CASE( "world to screen projection successful" )
     physics_component -> consider( move( gravity ) );
 
     window.on_update( [&]{ window.scroll_x( -5 ); } );
+
+    ball_handle.on_update( [&]
+                           {
+                             time_elapsed += .01;
+                             unique_ptr<Vector2<Displacement>> displacement =
+                               physics_component -> advance( time_elapsed );
+                             shift_ball_x_y(
+                               ball_handle,
+                               displacement -> get_x_component_magnitude(),
+                               displacement -> get_y_component_magnitude()
+                               );
+                           }
+      );
+
+    run_while_visible( game_components, window, engine );    
+  }
+
+  SECTION( "physics component test: gravity and normality" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 10, M_PI_2 );
+    unique_ptr<Vector2<Force>> normality = make_unique<Vector2<Force>>( 10, 3 * M_PI_2 );
+
+    physics_component -> consider( move( gravity ) );
+    physics_component -> consider( move( normality ) );
+
+    window.on_update( [&]{ window.scroll_x( -5 ); } );
+
+    ball_handle.on_update( [&]
+                           {
+                             time_elapsed += .01;
+                             unique_ptr<Vector2<Displacement>> displacement =
+                               physics_component -> advance( time_elapsed );
+                             shift_ball_x_y(
+                               ball_handle,
+                               displacement -> get_x_component_magnitude(),
+                               displacement -> get_y_component_magnitude()
+                               );
+                           }
+      );
+
+    run_while_visible( game_components, window, engine );    
+  }
+
+  SECTION( "physics component test: force against screen movement" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<Vector2<Force>> left_force = make_unique<Vector2<Force>>( 7, 3 * M_PI_4 );
+
+    physics_component -> consider( move( left_force ) );
+
+    window.on_update( [&]{ window.scroll_x( -7 ); } );
 
     ball_handle.on_update( [&]
                            {
