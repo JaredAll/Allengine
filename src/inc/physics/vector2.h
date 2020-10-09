@@ -7,6 +7,7 @@
 #include <type_traits>
 #include <utility>
 #include "vector_qualities.h"
+#include <functional>
 
 #define EPSILON 0.0001
 
@@ -19,6 +20,7 @@ public:
     : magnitude( param_magnitude )
   {
     theta = param_theta < 0 ? param_theta + 2 * M_PI : param_theta;
+    parametric_update = []( float delta_t ){};
     quality = Quality{};
   }
 
@@ -59,9 +61,24 @@ public:
     return theta;
   }
 
+  void set_theta( float param_theta )
+  {
+    theta = param_theta;
+  }
+
   Quality get_quality() const
   {
     return quality;
+  }
+
+  void set_parametric_update( std::function<void( float )> update_function )
+  {
+    parametric_update = update_function;
+  }
+
+  void update( float delta_t )
+  {
+    parametric_update( delta_t );
   }
 
   std::unique_ptr<Vector2Base<Quality>> operator+( Vector2Base<Quality> const& vector ) const
@@ -89,6 +106,7 @@ private:
   float magnitude;
   float theta;
   Quality quality;
+  std::function<void( float )> parametric_update;
   
 };
 

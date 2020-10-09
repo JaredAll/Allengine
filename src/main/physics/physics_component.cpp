@@ -55,5 +55,10 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   velocity = make_unique<Velocity_v>( displacement -> get_magnitude() / delta_t,
                                       displacement -> get_theta() );
 
+  for( auto& current_force : forces )
+  {
+    current_force -> update( delta_t );
+  }
+
   return move( displacement );
 }
