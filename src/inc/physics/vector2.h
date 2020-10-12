@@ -56,6 +56,11 @@ public:
     return magnitude;
   }
 
+  void set_magnitude( float param_magnitude )
+  {
+    magnitude = param_magnitude;
+  }
+
   float get_theta() const
   {
     return theta;

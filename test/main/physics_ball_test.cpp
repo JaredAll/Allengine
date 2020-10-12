@@ -266,4 +266,39 @@ TEST_CASE( "world to screen projection successful" )
 
     run_while_visible( game_components, window, engine );    
   }
+
+  SECTION( "physics component test: spring force" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<Vector2<Force>> spring_force = make_unique<Vector2<Force>>( -4, M_PI );
+
+    ball_handle.set_location( make_unique<WorldCoordinates>( 300, 300 ) );
+
+    Vector2<Force>& spring_force_handle = *spring_force;
+
+    physics_component -> consider( move( spring_force ) );
+
+    spring_force_handle.set_parametric_update( [&]( float delta_t ){
+                                                 spring_force_handle.set_magnitude(
+                                                   -.1 * cos( delta_t * 3 ) );
+                                               } );
+
+    ball_handle.on_update( [&]
+                           {
+                             time_elapsed += .1;
+                             unique_ptr<Vector2<Displacement>> displacement =
+                               physics_component -> advance( time_elapsed );
+                             shift_ball_x_y(
+                               ball_handle,
+                               displacement -> get_x_component_magnitude(),
+                               displacement -> get_y_component_magnitude()
+                               );
+                           }
+      );
+
+    run_while_visible( game_components, window, engine );    
+  }
 }
