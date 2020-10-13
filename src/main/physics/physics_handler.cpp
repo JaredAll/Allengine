@@ -1,9 +1,12 @@
 #include "physics_handler.h"
 #include "game_component.h"
+#include "physics_component.h"
+#include "world_coordinates.h"
 
 using std::make_unique;
+using std::unique_ptr;
 
-bool PhysicsHandler::detectCollision( GameComponent& first, GameComponent& second )
+bool PhysicsHandler::detect_collision( GameComponent& first, GameComponent& second )
 {
   WorldCoordinates first_upper_left = first.get_location();  
   WorldCoordinates first_lower_right = WorldCoordinates(
@@ -22,4 +25,36 @@ bool PhysicsHandler::detectCollision( GameComponent& first, GameComponent& secon
     ( first_lower_right.get_world_x() <= second_lower_right.get_world_x() ) &&
     ( first_upper_left.get_world_y() >= second_upper_left.get_world_y() ) &&
     ( first_upper_left.get_world_y() <= second_lower_right.get_world_y() );
+}
+
+void PhysicsHandler::handle_collision( GameComponent& first, GameComponent& second )
+{
+  if( detect_collision( first, second ) )
+  {    
+    PhysicsComponent& first_physics = first.get_physics_component();
+    PhysicsComponent& second_physics = second.get_physics_component();
+
+    if( first_physics.is_inertial() )
+    {
+      handle_collision_inertial( first, second );
+    }
+    else
+    {
+      handle_collision_inertial( second, first );
+    }
+  }
+}
+
+void PhysicsHandler::handle_collision_inertial( GameComponent& inertial, GameComponent& in_motion )
+{
+  int new_motion_x = in_motion.get_location().get_world_x();
+  int new_motion_y = inertial.get_location().get_world_y() - in_motion.get_height();
+
+  unique_ptr<WorldCoordinates> new_motion_coordinates = make_unique<WorldCoordinates>(
+    new_motion_x,
+    new_motion_y );
+
+  in_motion.set_location( move( new_motion_coordinates ) );
+
+  in_motion.get_physics_component().freeze();
 }

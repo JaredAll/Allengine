@@ -10,8 +10,8 @@ using Acceleration_v = Vector2<Acceleration>;
 using Velocity_v = Vector2<Velocity>;
 using Displacement_v = Vector2<Displacement>;
 
-PhysicsComponent::PhysicsComponent( float param_mass )
-  : mass( param_mass )
+PhysicsComponent::PhysicsComponent( float param_mass, bool param_inertial )
+  : mass( param_mass ), inertial( param_inertial )
 {
   velocity = make_unique<Velocity_v>( 0, 0 );
 }
@@ -61,4 +61,20 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   }
 
   return move( displacement );
+}
+
+bool PhysicsComponent::is_inertial()
+{
+  return inertial;
+}
+
+void PhysicsComponent::freeze()
+{
+  velocity -> set_magnitude( 0 );
+  velocity -> set_theta( 0 );
+
+  acceleration -> set_magnitude( 0 );
+  acceleration -> set_theta( 0 );
+
+  forces.clear();
 }

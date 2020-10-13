@@ -23,9 +23,9 @@ void run_while_no_collision(
   unique_ptr<PhysicsHandler> physics_handler = make_unique<PhysicsHandler>();
 
   bool collision = false;
-  while( !collision )
+  while( true )
   {
-    collision = physics_handler -> detectCollision(
+    physics_handler -> handle_collision(
         *game_components.at( 0 ),
         *game_components.at( 1 ) );
     
@@ -106,10 +106,10 @@ TEST_CASE( "test physics ball collision" )
     float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> first_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass );
+      make_unique<PhysicsComponent>( ball_mass, false );
 
     unique_ptr<PhysicsComponent> second_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass );
+      make_unique<PhysicsComponent>( ball_mass, true );
 
     PhysicsComponent& first_physics = *first_ball_physics_component;
     PhysicsComponent& second_physics = *second_ball_physics_component;
@@ -119,6 +119,8 @@ TEST_CASE( "test physics ball collision" )
 
     first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
     second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
+
+    window.on_update( [&]{ window.scroll_x( -2 ); } );
 
     first_ball_handle.on_update( [&]
                            {

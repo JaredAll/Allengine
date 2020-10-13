@@ -10,13 +10,17 @@ class PhysicsComponent
 {
 public:
   
-  PhysicsComponent( float mass );
+  PhysicsComponent( float mass, bool inertial );
 
   void consider( std::unique_ptr<Vector2<Force>> force );
 
   void remove( std::unique_ptr<Vector2<Force>> force );
 
   std::unique_ptr<Vector2<Displacement>> advance( float delta_t );
+
+  bool is_inertial();
+
+  void freeze();
 
 private:
 
@@ -26,6 +30,7 @@ private:
   std::vector<std::unique_ptr<Vector2<Force>>> forces;
 
   float mass;
+  bool inertial;
 
 };
 

@@ -49,7 +49,7 @@ void run_while_visible(
   }
 }
 
-TEST_CASE( "world to screen projection successful" )
+TEST_CASE( "world to screen projection successful", "[.]" )
 {
   int width = 500;
   int height = 500;
@@ -148,7 +148,9 @@ TEST_CASE( "world to screen projection successful" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<PhysicsComponent> physics_component =
+      make_unique<PhysicsComponent>( ball_mass, false );
+    
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 10, M_PI_2 );
 
     physics_component -> consider( move( gravity ) );
@@ -176,7 +178,9 @@ TEST_CASE( "world to screen projection successful" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<PhysicsComponent> physics_component = 
+      make_unique<PhysicsComponent>( ball_mass, false );
+    
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 10, M_PI_2 );
     unique_ptr<Vector2<Force>> normality = make_unique<Vector2<Force>>( 10, 3 * M_PI_2 );
 
@@ -206,7 +210,9 @@ TEST_CASE( "world to screen projection successful" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<PhysicsComponent> physics_component =
+      make_unique<PhysicsComponent>( ball_mass, false );
+    
     unique_ptr<Vector2<Force>> left_force = make_unique<Vector2<Force>>( 7, 3 * M_PI_4 );
 
     physics_component -> consider( move( left_force ) );
@@ -234,7 +240,9 @@ TEST_CASE( "world to screen projection successful" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<PhysicsComponent> physics_component =
+      make_unique<PhysicsComponent>( ball_mass, false );
+    
     unique_ptr<Vector2<Force>> left_force = make_unique<Vector2<Force>>( 10, M_PI );
 
     ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
@@ -269,7 +277,9 @@ TEST_CASE( "world to screen projection successful" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
+    unique_ptr<PhysicsComponent> physics_component = 
+      make_unique<PhysicsComponent>( ball_mass, false );
+    
     unique_ptr<Vector2<Force>> spring_force = make_unique<Vector2<Force>>( -4, M_PI );
 
     ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
