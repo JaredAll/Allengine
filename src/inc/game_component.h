@@ -1,6 +1,7 @@
 #ifndef GAME_COMPONENT_H
 #define GAME_COMPONENT_H
 
+#include "physics_component.h"
 #include "render_component.h"
 #include <vector>
 #include <iostream>
@@ -16,6 +17,10 @@ public:
 
   virtual bool accepting_input() = 0;
 
+  virtual int get_height() = 0;
+
+  virtual int get_width() = 0;
+
   virtual ~GameComponent() = default;
 
   void set_location( std::unique_ptr<WorldCoordinates> location_param )
@@ -23,9 +28,19 @@ public:
     location = move( location_param );
   }
 
-  WorldCoordinates const& get_location() const
+  WorldCoordinates& get_location() const
   {
     return *location;
+  }
+
+  void set_physics_component( std::unique_ptr<PhysicsComponent> physics )
+  {
+    physics_component = move( physics );
+  }
+
+  PhysicsComponent& get_physics_component() const
+  {
+    return *physics_component;
   }
 
 protected:
@@ -35,6 +50,7 @@ protected:
 private:
 
   std::unique_ptr<WorldCoordinates> location;
+  std::unique_ptr<PhysicsComponent> physics_component;
   
 };
 

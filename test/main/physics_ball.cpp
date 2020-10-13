@@ -23,3 +23,13 @@ vector<unique_ptr<Sprite>>& PhysicsBall::get_render_components()
 {
   return render_components;
 }
+
+int PhysicsBall::get_height()
+{
+  return render_components.at( 0 ) -> get_h();
+}
+
+int PhysicsBall::get_width()
+{
+  return render_components.at( 0 ) -> get_w();
+}

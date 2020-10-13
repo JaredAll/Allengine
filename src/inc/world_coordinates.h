@@ -12,7 +12,11 @@ public:
 
   int get_world_x() const;
 
+  void set_world_x( int x );
+
   int get_world_y() const;
+
+  void set_world_y( int y );
 
   std::unique_ptr<WorldCoordinates> operator+( WorldCoordinates const& other ) const;
 

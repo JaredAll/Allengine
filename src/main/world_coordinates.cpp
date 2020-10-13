@@ -15,9 +15,19 @@ int WorldCoordinates::get_world_x() const
   return x;
 }
 
+void WorldCoordinates::set_world_x( int param_x )
+{
+  x = param_x;
+}
+
 int WorldCoordinates::get_world_y() const
 {
   return y;
+}
+
+void WorldCoordinates::set_world_y( int param_y )
+{
+  y = param_y;
 }
 
 unique_ptr<WorldCoordinates> WorldCoordinates::operator+( WorldCoordinates const& other) const

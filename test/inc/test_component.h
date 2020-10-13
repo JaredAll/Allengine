@@ -25,6 +25,16 @@ public:
   {
   }
 
+  virtual int get_height() override
+  {
+    return 0;
+  }
+
+  virtual int get_width() override
+  {
+    return 0;
+  }
+
   virtual std::vector<std::unique_ptr<Sprite>>& get_render_components() = 0;
 
   virtual void on_update( std::function<void()> on_update )

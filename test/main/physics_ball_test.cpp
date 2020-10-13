@@ -17,11 +17,8 @@ void shift_ball_x_y( PhysicsBall& ball_handle, float x, float y )
   int new_location_x = ball_handle.get_location().get_world_x() + x;
   int new_location_y = ball_handle.get_location().get_world_y() + y;
 
-  ball_handle.set_location(
-    make_unique<WorldCoordinates>(
-      new_location_x,
-      new_location_y )
-    );
+  ball_handle.get_location().set_world_x( new_location_x );
+  ball_handle.get_location().set_world_y( new_location_y );
 }
 
 void run_while_visible(
@@ -240,7 +237,7 @@ TEST_CASE( "world to screen projection successful" )
     unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
     unique_ptr<Vector2<Force>> left_force = make_unique<Vector2<Force>>( 10, M_PI );
 
-    ball_handle.set_location( make_unique<WorldCoordinates>( 300, 300 ) );
+    ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
 
     Vector2<Force>& left_force_handle = *left_force;
 
@@ -275,7 +272,7 @@ TEST_CASE( "world to screen projection successful" )
     unique_ptr<PhysicsComponent> physics_component = make_unique<PhysicsComponent>( ball_mass );
     unique_ptr<Vector2<Force>> spring_force = make_unique<Vector2<Force>>( -4, M_PI );
 
-    ball_handle.set_location( make_unique<WorldCoordinates>( 300, 300 ) );
+    ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
 
     Vector2<Force>& spring_force_handle = *spring_force;
 
