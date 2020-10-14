@@ -18,6 +18,7 @@ PhysicsComponent::PhysicsComponent( float param_mass, bool param_inertial )
   location = make_unique<WorldCoordinates>( 0, 0 );
   displacement = make_unique<Displacement_v>( 0, 0 );
   velocity = make_unique<Velocity_v>( 0, 0 );
+  acceleration = make_unique<Acceleration_v>( 0, 0 );
 }
 
 void PhysicsComponent::consider( unique_ptr<Force_v> force )

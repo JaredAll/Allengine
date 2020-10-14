@@ -13,7 +13,8 @@ public:
 
   TestComponent() : GameComponent()
   {
-    update_delegate = []{};  
+    update_delegate = []{};
+    set_physics_component( std::make_unique<PhysicsComponent>( 0, false ) ); 
   }
 
   virtual void update() override
