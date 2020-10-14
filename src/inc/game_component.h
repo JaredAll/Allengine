@@ -25,12 +25,12 @@ public:
 
   void set_location( std::unique_ptr<WorldCoordinates> location_param )
   {
-    location = move( location_param );
+    physics_component -> set_location( location_param );
   }
 
   WorldCoordinates& get_location() const
   {
-    return *location;
+    return physics_component -> get_location();
   }
 
   void set_physics_component( std::unique_ptr<PhysicsComponent> physics )
@@ -49,7 +49,6 @@ protected:
 
 private:
 
-  std::unique_ptr<WorldCoordinates> location;
   std::unique_ptr<PhysicsComponent> physics_component;
   
 };

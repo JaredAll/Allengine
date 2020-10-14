@@ -1,5 +1,7 @@
 #include "physics_component.h"
 #include "vector_qualities.h"
+#include "world_coordinates.h"
+#include <cmath>
 #include <memory>
 
 using std::vector;
@@ -13,6 +15,8 @@ using Displacement_v = Vector2<Displacement>;
 PhysicsComponent::PhysicsComponent( float param_mass, bool param_inertial )
   : mass( param_mass ), inertial( param_inertial )
 {
+  location = make_unique<WorldCoordinates>( 0, 0 );
+  displacement = make_unique<Displacement_v>( 0, 0 );
   velocity = make_unique<Velocity_v>( 0, 0 );
 }
 
@@ -50,17 +54,26 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   unique_ptr<Displacement_v> velocity_displacement = velocity -> integrate( delta_t, 1 );
   unique_ptr<Displacement_v> acceleration_displacement = acceleration -> integrate_2( delta_t );
 
-  unique_ptr<Displacement_v> displacement = *velocity_displacement + *acceleration_displacement;
+  unique_ptr<Displacement_v> change_in_displacement =
+    *velocity_displacement + *acceleration_displacement;
 
-  velocity = make_unique<Velocity_v>( displacement -> get_magnitude() / delta_t,
-                                      displacement -> get_theta() );
+  unique_ptr<Displacement_v> new_displacement = *change_in_displacement + *displacement;
+
+  velocity = make_unique<Velocity_v>( new_displacement -> get_magnitude() / delta_t,
+                                      new_displacement -> get_theta() );
+
+  displacement = make_unique<Displacement_v>( new_displacement -> get_magnitude(),
+                                              new_displacement -> get_theta() );
+
+  location = make_unique<WorldCoordinates>( displacement -> get_x_component_magnitude(),
+                                            displacement -> get_y_component_magnitude() );
 
   for( auto& current_force : forces )
   {
     current_force -> update( delta_t );
   }
 
-  return move( displacement );
+  return move( new_displacement );
 }
 
 bool PhysicsComponent::is_inertial()
@@ -77,4 +90,23 @@ void PhysicsComponent::freeze()
   acceleration -> set_theta( 0 );
 
   forces.clear();
+}
+
+void PhysicsComponent::set_location( unique_ptr<WorldCoordinates>& coordinates )
+{
+  float magnitude = std::sqrt(
+    std::pow( coordinates -> get_world_x(), 2 ) +
+    std::pow( coordinates -> get_world_y(), 2 ) );
+
+  float theta = std::atan2( coordinates -> get_world_y(), coordinates -> get_world_x() );
+
+  displacement = make_unique<Displacement_v>( magnitude, theta );
+  
+  location = make_unique<WorldCoordinates>( coordinates -> get_world_x(),
+                                            coordinates -> get_world_y() );
+}
+
+WorldCoordinates& PhysicsComponent::get_location()
+{
+  return *location;
 }

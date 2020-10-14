@@ -1,3 +1,4 @@
+#include "SDL_timer.h"
 #include "catch.hpp"
 #include "physics_ball.h"
 #include "physics_handler.h"
@@ -22,9 +23,12 @@ void run_while_no_collision(
 {
   unique_ptr<PhysicsHandler> physics_handler = make_unique<PhysicsHandler>();
 
-  bool collision = false;
-  while( true )
+  Uint32 begin = SDL_GetTicks();
+  Uint32 now = begin;
+  while( now - begin < 4000 )
   {
+    now = SDL_GetTicks();
+
     physics_handler -> handle_collision(
         *game_components.at( 0 ),
         *game_components.at( 1 ) );
@@ -120,7 +124,81 @@ TEST_CASE( "test physics ball collision" )
     first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
     second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
 
+    first_ball_handle.on_update( [&]
+                           {
+                             time_elapsed += .01;
+                             unique_ptr<Vector2<Displacement>> displacement =
+                               first_physics.advance( time_elapsed );
+                             shift_ball_x_y(
+                               first_ball_handle,
+                               displacement -> get_x_component_magnitude(),
+                               displacement -> get_y_component_magnitude()
+                               );
+                           }
+      );
+
+    run_while_no_collision( game_components, window, engine );    
+  }
+
+  SECTION( "First physics component collision test: gravity with screen motion" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<PhysicsComponent> first_ball_physics_component =
+      make_unique<PhysicsComponent>( ball_mass, false );
+
+    unique_ptr<PhysicsComponent> second_ball_physics_component =
+      make_unique<PhysicsComponent>( ball_mass, true );
+
+    PhysicsComponent& first_physics = *first_ball_physics_component;
+    PhysicsComponent& second_physics = *second_ball_physics_component;
+
+    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
+    first_ball_physics_component -> consider( move( gravity ) );
+
+    first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
+    second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
+
     window.on_update( [&]{ window.scroll_x( -2 ); } );
+
+    first_ball_handle.on_update( [&]
+                           {
+                             time_elapsed += .01;
+                             unique_ptr<Vector2<Displacement>> displacement =
+                               first_physics.advance( time_elapsed );
+                             shift_ball_x_y(
+                               first_ball_handle,
+                               displacement -> get_x_component_magnitude(),
+                               displacement -> get_y_component_magnitude()
+                               );
+                           }
+      );
+
+    run_while_no_collision( game_components, window, engine );    
+  }
+
+  SECTION( "First physics component collision test: gravity, blocks not aligned" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<PhysicsComponent> first_ball_physics_component =
+      make_unique<PhysicsComponent>( ball_mass, false );
+
+    unique_ptr<PhysicsComponent> second_ball_physics_component =
+      make_unique<PhysicsComponent>( ball_mass, true );
+
+    PhysicsComponent& first_physics = *first_ball_physics_component;
+    PhysicsComponent& second_physics = *second_ball_physics_component;
+
+    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
+    first_ball_physics_component -> consider( move( gravity ) );
+
+    first_ball_handle.set_location( make_unique<WorldCoordinates>( 8, 0 ) );
+
+    first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
+    second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
 
     first_ball_handle.on_update( [&]
                            {
