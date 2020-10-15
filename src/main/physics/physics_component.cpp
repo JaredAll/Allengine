@@ -63,11 +63,11 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   velocity = make_unique<Velocity_v>( change_in_displacement -> get_magnitude() / delta_t,
                                       change_in_displacement -> get_theta() );
 
-  displacement = make_unique<Displacement_v>( change_in_displacement -> get_magnitude(),
-                                              change_in_displacement -> get_theta() );
+  displacement = make_unique<Displacement_v>( new_displacement -> get_magnitude(),
+                                              new_displacement -> get_theta() );
 
-  location = make_unique<WorldCoordinates>( displacement -> get_x_component_magnitude(),
-                                            displacement -> get_y_component_magnitude() );
+  location = make_unique<WorldCoordinates>( new_displacement -> get_x_component_magnitude(),
+                                            new_displacement -> get_y_component_magnitude() );
 
   for( auto& current_force : forces )
   {

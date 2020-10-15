@@ -116,7 +116,7 @@ TEST_CASE( "test physics ball collision" )
     first_physics.consider( move( gravity ) );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .1;
+                                   time_elapsed += .01;
                                    first_physics.advance( time_elapsed );
                                  });
 
@@ -134,7 +134,7 @@ TEST_CASE( "test physics ball collision" )
     engine -> set_current_scroll( -2 );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .1;
+                                   time_elapsed += .01;
                                    first_physics.advance( time_elapsed );
                                  });
 
@@ -149,10 +149,10 @@ TEST_CASE( "test physics ball collision" )
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
     first_physics.consider( move( gravity ) );
 
-    first_ball_handle.set_location( make_unique<WorldCoordinates>( 8, 0 ) );
+    first_ball_handle.set_location( make_unique<WorldCoordinates>( 7, 0 ) );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .1;
+                                   time_elapsed += .01;
                                    first_physics.advance( time_elapsed );
                                  });
 
