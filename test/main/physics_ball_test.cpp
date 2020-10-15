@@ -22,34 +22,25 @@ void shift_ball_x_y( PhysicsBall& ball_handle, float x, float y )
 }
 
 void run_while_visible(
-  vector<unique_ptr<TestComponent>>& game_components,
+  vector<unique_ptr<PhysicsBall>>& game_components,
   ScreenWindow& window,
   unique_ptr<Engine>& engine)
 {
-  bool visible = true;
-  while( visible )
+  Uint32 begin = SDL_GetTicks();
+  Uint32 now = begin;
+  while( now - begin < 3000 )
   {
+    now = SDL_GetTicks();
+
     for( auto& component : game_components )
     {
-      for( auto& render_component : component -> get_render_components() )
-      {
-        unique_ptr<ScreenCoordinates> screen_location = window.project( 
-          *( render_component -> get_world_offset() +
-             component -> get_location() )
-          );
-
-        visible = screen_location -> is_visible();
-
-        render_component -> set_screen_location(
-          move( screen_location )
-          );
-      }
+      component -> update_screen_position( window );
     }
     engine -> advance( game_components );        
   }
 }
 
-TEST_CASE( "world to screen projection successful", "[.]" )
+TEST_CASE( "world to screen projection successful" )
 {
   int width = 500;
   int height = 500;
@@ -66,14 +57,22 @@ TEST_CASE( "world to screen projection successful", "[.]" )
     renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
     );
 
+  float ball_mass = 10;
+
+  unique_ptr<PhysicsComponent> physics_component_ptr =
+    make_unique<PhysicsComponent>( ball_mass, false );
+
+  PhysicsComponent& physics_component = *physics_component_ptr;
+
   unique_ptr<PhysicsBall> ball = make_unique<PhysicsBall>(
     make_unique<WorldCoordinates>( 0, 0 ),
+    move( physics_component_ptr ),
     move( ball_sprite )
     );
 
   PhysicsBall& ball_handle = *ball;
 
-  vector<unique_ptr<TestComponent>> game_components;
+  vector<unique_ptr<PhysicsBall>> game_components;
   game_components.push_back( move( ball ) );
 
   unique_ptr<WorldCoordinates> upper_left_corner = make_unique<WorldCoordinates>( 0, 0 );
@@ -85,7 +84,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
     );
 
   ScreenWindow& window = *screen_window;
-  game_components.push_back( move( screen_window ) );
+
+  engine -> set_screen_window( move( screen_window ) );
 
   SECTION( "physics ball moves in world" )
   {
@@ -100,7 +100,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "physics ball and screen window both move" )
   {
     ball_handle.on_update( [&]{ shift_ball_x_y( ball_handle, 10, 10 ); } );
-    window.on_update( [&]{ window.scroll_x( 10 ); } );
+
+    engine -> set_current_scroll( 5 );
 
     run_while_visible( game_components, window, engine );
         
@@ -110,7 +111,7 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
   SECTION( "screen window shifts left" )
   {
-    window.on_update( [&]{ window.scroll_x( -10 ); } );
+    engine -> set_current_scroll( -10 );
 
     run_while_visible( game_components, window, engine );
     
@@ -136,7 +137,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     game_components.push_back( move( ball_2 ) );
 
-    window.on_update( [&]{ window.scroll_x( 3 ); } );
+    engine -> set_current_scroll( 3 );
+    
     ball_handle.on_update( [&]{ shift_ball_x_y( ball_handle, 10, 1 ); } );
     ball_2_handle.on_update( [&]{ shift_ball_x_y( ball_2_handle, 8, 6 ); } );
 
@@ -155,7 +157,7 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     physics_component -> consider( move( gravity ) );
 
-    window.on_update( [&]{ window.scroll_x( -5 ); } );
+    engine -> set_current_scroll( -5 );
 
     ball_handle.on_update( [&]
                            {
@@ -187,7 +189,7 @@ TEST_CASE( "world to screen projection successful", "[.]" )
     physics_component -> consider( move( gravity ) );
     physics_component -> consider( move( normality ) );
 
-    window.on_update( [&]{ window.scroll_x( -5 ); } );
+    engine -> set_current_scroll( -5 );
 
     ball_handle.on_update( [&]
                            {
@@ -217,7 +219,7 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     physics_component -> consider( move( left_force ) );
 
-    window.on_update( [&]{ window.scroll_x( -7 ); } );
+    engine -> set_current_scroll( -7 );
 
     ball_handle.on_update( [&]
                            {

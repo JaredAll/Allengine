@@ -25,7 +25,7 @@ public:
 
   WorldCoordinates& get_location();
 
-  void set_location( std::unique_ptr<WorldCoordinates>& coordinates );
+  void set_location( std::unique_ptr<WorldCoordinates> coordinates );
 
 private:
 

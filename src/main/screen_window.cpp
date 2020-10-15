@@ -49,17 +49,3 @@ void ScreenWindow::scroll_x( int displacement )
   upper_left_corner = *upper_left_corner + *scroll_offset;
   lower_right_corner = *lower_right_corner + *scroll_offset;
 }
-
-void ScreenWindow::update( InputEvent& event)
-{
-}
-
-bool ScreenWindow::accepting_input()
-{
-  return false;
-}
-
-std::vector<std::unique_ptr<Sprite>>& ScreenWindow::get_render_components()
-{
-  return render_components;
-}

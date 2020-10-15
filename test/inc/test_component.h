@@ -14,7 +14,14 @@ public:
   TestComponent() : GameComponent()
   {
     update_delegate = []{};
-    set_physics_component( std::make_unique<PhysicsComponent>( 0, false ) ); 
+    origin = std::make_unique<WorldCoordinates>( 0, 0 );
+  }
+
+  virtual std::vector<std::unique_ptr<Sprite>>& get_render_components() = 0;
+
+  virtual void on_update( std::function<void()> on_update ) override
+  {
+    update_delegate = on_update;
   }
 
   virtual void update() override
@@ -24,6 +31,12 @@ public:
 
   virtual void update( InputEvent& event ) override
   {
+    update_delegate();
+  }
+
+  virtual bool accepting_input() override
+  {
+    return false;
   }
 
   virtual int get_height() override
@@ -36,16 +49,34 @@ public:
     return 0;
   }
 
-  virtual std::vector<std::unique_ptr<Sprite>>& get_render_components() = 0;
-
-  virtual void on_update( std::function<void()> on_update )
+  virtual void set_location( std::unique_ptr<WorldCoordinates> new_location ) override
   {
-    update_delegate = on_update;
+  }
+
+  virtual WorldCoordinates& get_location() override
+  {
+    return *origin;
+  }
+
+  virtual void update_screen_position( ScreenWindow& window ) override
+  {
+    for( auto& render_component : get_render_components() )
+      {
+        std::unique_ptr<ScreenCoordinates> screen_location = window.project( 
+          *( render_component -> get_world_offset() +
+             get_location() )
+          );
+
+        render_component -> set_screen_location(
+          move( screen_location )
+          );
+      }
   }
 
 private:
-  
+
   std::function<void()> update_delegate;
+  std::unique_ptr<WorldCoordinates> origin;
 
 };
 

@@ -87,6 +87,16 @@ bool Engine::peek_has_updated()
   return peek_update;
 }
 
+void Engine::set_screen_window( unique_ptr<ScreenWindow> param_window )
+{
+  window = move( param_window );
+}
+
+void Engine::set_current_scroll( int param_current_scroll )
+{
+  current_scroll = param_current_scroll;
+}
+
 void Engine::maintain_time()
 {
   Uint32 ms_per_frame = 16;

@@ -60,11 +60,11 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
 
   unique_ptr<Displacement_v> new_displacement = *change_in_displacement + *displacement;
 
-  velocity = make_unique<Velocity_v>( new_displacement -> get_magnitude() / delta_t,
-                                      new_displacement -> get_theta() );
+  velocity = make_unique<Velocity_v>( change_in_displacement -> get_magnitude() / delta_t,
+                                      change_in_displacement -> get_theta() );
 
-  displacement = make_unique<Displacement_v>( new_displacement -> get_magnitude(),
-                                              new_displacement -> get_theta() );
+  displacement = make_unique<Displacement_v>( change_in_displacement -> get_magnitude(),
+                                              change_in_displacement -> get_theta() );
 
   location = make_unique<WorldCoordinates>( displacement -> get_x_component_magnitude(),
                                             displacement -> get_y_component_magnitude() );
@@ -74,7 +74,7 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
     current_force -> update( delta_t );
   }
 
-  return move( new_displacement );
+  return move( change_in_displacement );
 }
 
 bool PhysicsComponent::is_inertial()
@@ -93,7 +93,7 @@ void PhysicsComponent::freeze()
   forces.clear();
 }
 
-void PhysicsComponent::set_location( unique_ptr<WorldCoordinates>& coordinates )
+void PhysicsComponent::set_location( unique_ptr<WorldCoordinates> coordinates )
 {
   float magnitude = std::sqrt(
     std::pow( coordinates -> get_world_x(), 2 ) +

@@ -6,6 +6,8 @@
 #include <vector>
 #include <iostream>
 #include "input_event.h"
+#include "screen_coordinates.h"
+#include "screen_window.h"
 
 class GameComponent
 {
@@ -23,33 +25,19 @@ public:
 
   virtual ~GameComponent() = default;
 
-  void set_location( std::unique_ptr<WorldCoordinates> location_param )
-  {
-    physics_component -> set_location( location_param );
-  }
+  virtual void on_update( std::function<void()> on_update ) = 0;
 
-  WorldCoordinates& get_location() const
-  {
-    return physics_component -> get_location();
-  }
+  virtual void set_location( std::unique_ptr<WorldCoordinates> new_location ) = 0;
 
-  void set_physics_component( std::unique_ptr<PhysicsComponent> physics )
-  {
-    physics_component = move( physics );
-  }
+  virtual WorldCoordinates& get_location() = 0;
 
-  PhysicsComponent& get_physics_component() const
-  {
-    return *physics_component;
-  }
+  virtual void update_screen_position( ScreenWindow& window ) = 0;
 
 protected:
 
-  GameComponent(){}
-
-private:
-
-  std::unique_ptr<PhysicsComponent> physics_component;
+  GameComponent()
+  {
+  }
   
 };
 

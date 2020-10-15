@@ -24,6 +24,7 @@ public:
   {
     if( should_render )
     {
+      window -> scroll_x( current_scroll );
       render_components( components );
     }
 
@@ -38,11 +39,20 @@ public:
 
   GameRenderer& get_renderer();
 
+  void set_screen_window( std::unique_ptr<ScreenWindow> param_window );
+
+  void set_current_scroll( int param_current_scroll );
+
 private:
 
   template< typename T >
   void render_components( std::vector<std::unique_ptr<T>>& components )
   {
+    for( auto& component : components )
+    {
+      component -> update_screen_position( *window );
+    }
+
     renderer -> render( components );
   
     frame_count++;
@@ -75,6 +85,8 @@ private:
 
   std::unique_ptr<InputHandler> input_handler;
   std::unique_ptr<GameRenderer> renderer;
+  std::unique_ptr<ScreenWindow> window;
+  int current_scroll;
   bool should_render;
   bool should_update;
   bool has_updated;

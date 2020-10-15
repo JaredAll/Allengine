@@ -14,10 +14,8 @@ using std::unique_ptr;
 using std::make_unique;
 using std::vector;
 
-void shift_ball_x_y( PhysicsBall& ball_handle, float x, float y );
-
 void run_while_no_collision(
-  vector<unique_ptr<TestComponent>>& game_components,
+  vector<unique_ptr<PhysicsBall>>& game_components,
   ScreenWindow& window,
   unique_ptr<Engine>& engine)
 {
@@ -30,22 +28,12 @@ void run_while_no_collision(
     now = SDL_GetTicks();
 
     physics_handler -> handle_collision(
-        *game_components.at( 0 ),
-        *game_components.at( 1 ) );
+      *game_components.at( 0 ),
+      *game_components.at( 1 ) );
     
     for( auto& component : game_components )
     {
-      for( auto& render_component : component -> get_render_components() )
-      {
-        unique_ptr<ScreenCoordinates> screen_location = window.project( 
-          *( render_component -> get_world_offset() +
-             component -> get_location() )
-          );
-
-        render_component -> set_screen_location(
-          move( screen_location )
-          );
-      }
+      component -> update_screen_position( window );
     }
     engine -> advance( game_components );        
   }
@@ -75,8 +63,20 @@ TEST_CASE( "test physics ball collision" )
     renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
     );
 
+  float ball_mass = 10;
+
+  unique_ptr<PhysicsComponent> first_ball_physics_component =
+    make_unique<PhysicsComponent>( ball_mass, false );
+
+  unique_ptr<PhysicsComponent> second_ball_physics_component =
+    make_unique<PhysicsComponent>( ball_mass, true );
+
+  PhysicsComponent& first_physics = *first_ball_physics_component;
+  PhysicsComponent& second_physics = *second_ball_physics_component;
+
   unique_ptr<PhysicsBall> first_ball = make_unique<PhysicsBall>(
     make_unique<WorldCoordinates>( 0, 0 ),
+    move( first_ball_physics_component ),
     move( first_ball_sprite )
     );
 
@@ -84,12 +84,13 @@ TEST_CASE( "test physics ball collision" )
 
   unique_ptr<PhysicsBall> second_ball = make_unique<PhysicsBall>(
     make_unique<WorldCoordinates>( 0, 300 ),
+    move( second_ball_physics_component ),
     move( second_ball_sprite )
     );
 
   PhysicsBall& second_ball_handle = *second_ball;
 
-  vector<unique_ptr<TestComponent>> game_components;
+  vector<unique_ptr<PhysicsBall>> game_components;
   game_components.push_back( move( first_ball ) );
   game_components.push_back( move( second_ball ) );
 
@@ -102,40 +103,22 @@ TEST_CASE( "test physics ball collision" )
     );
 
   ScreenWindow& window = *screen_window;
-  game_components.push_back( move( screen_window ) );
+
+  engine -> set_screen_window( move( screen_window ) );
+  engine -> set_current_scroll( 0 );
 
   SECTION( "First physics component collision test: gravity" )
   {
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> first_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, false );
-
-    unique_ptr<PhysicsComponent> second_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, true );
-
-    PhysicsComponent& first_physics = *first_ball_physics_component;
-    PhysicsComponent& second_physics = *second_ball_physics_component;
-
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-    first_ball_physics_component -> consider( move( gravity ) );
+    first_physics.consider( move( gravity ) );
 
-    first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
-    second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
-
-    first_ball_handle.on_update( [&]
-                           {
-                             time_elapsed += .01;
-                             unique_ptr<Vector2<Displacement>> displacement =
-                               first_physics.advance( time_elapsed );
-                             shift_ball_x_y(
-                               first_ball_handle,
-                               displacement -> get_x_component_magnitude(),
-                               displacement -> get_y_component_magnitude()
-                               );
-                           }
-      );
+    first_ball_handle.on_update( [&] {
+                                   time_elapsed += .1;
+                                   first_physics.advance( time_elapsed );
+                                 });
 
     run_while_no_collision( game_components, window, engine );    
   }
@@ -145,35 +128,15 @@ TEST_CASE( "test physics ball collision" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> first_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, false );
-
-    unique_ptr<PhysicsComponent> second_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, true );
-
-    PhysicsComponent& first_physics = *first_ball_physics_component;
-    PhysicsComponent& second_physics = *second_ball_physics_component;
-
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-    first_ball_physics_component -> consider( move( gravity ) );
+    first_physics.consider( move( gravity ) );
 
-    first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
-    second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
+    engine -> set_current_scroll( -2 );
 
-    window.on_update( [&]{ window.scroll_x( -2 ); } );
-
-    first_ball_handle.on_update( [&]
-                           {
-                             time_elapsed += .01;
-                             unique_ptr<Vector2<Displacement>> displacement =
-                               first_physics.advance( time_elapsed );
-                             shift_ball_x_y(
-                               first_ball_handle,
-                               displacement -> get_x_component_magnitude(),
-                               displacement -> get_y_component_magnitude()
-                               );
-                           }
-      );
+    first_ball_handle.on_update( [&] {
+                                   time_elapsed += .1;
+                                   first_physics.advance( time_elapsed );
+                                 });
 
     run_while_no_collision( game_components, window, engine );    
   }
@@ -183,35 +146,15 @@ TEST_CASE( "test physics ball collision" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<PhysicsComponent> first_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, false );
-
-    unique_ptr<PhysicsComponent> second_ball_physics_component =
-      make_unique<PhysicsComponent>( ball_mass, true );
-
-    PhysicsComponent& first_physics = *first_ball_physics_component;
-    PhysicsComponent& second_physics = *second_ball_physics_component;
-
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-    first_ball_physics_component -> consider( move( gravity ) );
+    first_physics.consider( move( gravity ) );
 
     first_ball_handle.set_location( make_unique<WorldCoordinates>( 8, 0 ) );
 
-    first_ball_handle.set_physics_component( move( first_ball_physics_component ) );
-    second_ball_handle.set_physics_component( move( second_ball_physics_component ) );
-
-    first_ball_handle.on_update( [&]
-                           {
-                             time_elapsed += .01;
-                             unique_ptr<Vector2<Displacement>> displacement =
-                               first_physics.advance( time_elapsed );
-                             shift_ball_x_y(
-                               first_ball_handle,
-                               displacement -> get_x_component_magnitude(),
-                               displacement -> get_y_component_magnitude()
-                               );
-                           }
-      );
+    first_ball_handle.on_update( [&] {
+                                   time_elapsed += .1;
+                                   first_physics.advance( time_elapsed );
+                                 });
 
     run_while_no_collision( game_components, window, engine );    
   }
