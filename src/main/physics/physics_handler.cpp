@@ -22,8 +22,11 @@ bool PhysicsHandler::detect_collision( PhysicsBall& first, PhysicsBall& second )
 
   return
     ( first_lower_right.get_world_x() >= second_upper_left.get_world_x() ) &&
-    ( first_lower_right.get_world_x() <= second_lower_right.get_world_x() ) &&
-    ( first_upper_left.get_world_y() >= second_upper_left.get_world_y() ) &&
+    ( first_lower_right.get_world_x() <=
+      ( second_lower_right.get_world_x() + first.get_width() ) ) &&
+    
+    ( ( first_upper_left.get_world_y() + first.get_height() ) >=
+      second_upper_left.get_world_y() ) &&
     ( first_upper_left.get_world_y() <= second_lower_right.get_world_y() );
 }
 

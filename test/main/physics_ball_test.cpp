@@ -40,7 +40,7 @@ void run_while_visible(
   }
 }
 
-TEST_CASE( "world to screen projection successful" )
+TEST_CASE( "world to screen projection successful", "[.]" )
 {
   int width = 500;
   int height = 500;
