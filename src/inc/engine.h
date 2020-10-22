@@ -2,6 +2,7 @@
 #include "game_component.h"
 #include "input_event.h"
 #include "input_handler.h"
+#include "physics_handler.h"
 #include "render_component.h"
 #include "game_renderer.h"
 #include <SDL.h>
@@ -74,8 +75,8 @@ private:
       {
         component -> update( input_event );
       }
-      has_updated = true;
     }
+    has_updated = true;
     should_update = false;
   }
 

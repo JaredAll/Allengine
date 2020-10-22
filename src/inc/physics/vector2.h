@@ -171,18 +171,18 @@ public:
                                           vector_base -> get_theta() );
   }
 
-  auto integrate( float delta_t, int divisor )
+  auto integrate( float delta_t )
   {
     using Integration = typename Quality::Integration;
 
     std::unique_ptr<Vector2<Integration>> integrated_x_component =
       std::make_unique<Vector2<Integration>>(
-        this -> get_x_component_magnitude() * ( delta_t / divisor ),
+        this -> get_x_component_magnitude() * ( delta_t ),
         0 );
 
     std::unique_ptr<Vector2<Integration>> integrated_y_component =
       std::make_unique<Vector2<Integration>>( 
-        this -> get_y_component_magnitude() * ( delta_t / divisor ), 
+        this -> get_y_component_magnitude() * ( delta_t ), 
         M_PI_2 );
 
     return move( 

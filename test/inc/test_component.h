@@ -73,9 +73,12 @@ public:
       }
   }
 
+protected:
+
+    std::function<void()> update_delegate;
+
 private:
 
-  std::function<void()> update_delegate;
   std::unique_ptr<WorldCoordinates> origin;
 
 };

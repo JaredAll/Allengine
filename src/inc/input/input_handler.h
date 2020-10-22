@@ -20,6 +20,8 @@ private:
 
   bool escape( SDL_Event e );
 
+  bool up_arrow( SDL_Event e );
+
   bool right_arrow( SDL_Event e );
 
   bool left_arrow( SDL_Event e );

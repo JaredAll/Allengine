@@ -15,6 +15,8 @@ public:
 
   bool down_up() const;
 
+  bool up_up() const;
+
   bool enter_up() const;
 
   bool romeo_up() const;

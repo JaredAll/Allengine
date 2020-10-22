@@ -22,6 +22,12 @@ bool InputEvent::down_up() const
     current_frame_input == InputType::none;
 }
 
+bool InputEvent::up_up() const
+{
+  return previous_frame_input == InputType::up &&
+    current_frame_input == InputType::none;
+}
+
 bool InputEvent::enter_up() const
 {
   return previous_frame_input == InputType::enter &&

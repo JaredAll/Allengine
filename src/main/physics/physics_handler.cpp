@@ -2,6 +2,7 @@
 #include "game_component.h"
 #include "physics_component.h"
 #include "world_coordinates.h"
+#include <cmath>
 
 using std::make_unique;
 using std::unique_ptr;
@@ -50,14 +51,36 @@ void PhysicsHandler::handle_collision( PhysicsBall& first, PhysicsBall& second )
 
 void PhysicsHandler::handle_collision_inertial( PhysicsBall& inertial, PhysicsBall& in_motion )
 {
-  int new_motion_x = in_motion.get_location().get_world_x();
-  int new_motion_y = inertial.get_location().get_world_y() - in_motion.get_height();
+  Vector2<Velocity>& old_velocity = in_motion.get_physics_component().get_velocity();
+  float new_speed = old_velocity.get_magnitude() * .66;
 
-  unique_ptr<WorldCoordinates> new_motion_coordinates = make_unique<WorldCoordinates>(
-    new_motion_x,
-    new_motion_y );
+  if( abs( new_speed ) < 1 )
+  {
+    int new_motion_x_collision = in_motion.get_location().get_world_x();
+    int new_motion_y_collision = inertial.get_location().get_world_y() - in_motion.get_height();
 
-  in_motion.set_location( move( new_motion_coordinates ) );
+    unique_ptr<WorldCoordinates> new_collision_coordinates = make_unique<WorldCoordinates>(
+      new_motion_x_collision,
+      new_motion_y_collision );
 
-  in_motion.get_physics_component().freeze();
+    in_motion.set_location( move( new_collision_coordinates ) );
+
+    in_motion.get_physics_component().freeze();
+  }
+  else
+  {
+    int new_motion_x_no_collision = in_motion.get_location().get_world_x();
+    int new_motion_y_no_collision = inertial.get_location().get_world_y() -
+      2 * in_motion.get_height();
+
+    unique_ptr<WorldCoordinates> new_motion_coordinates = make_unique<WorldCoordinates>(
+      new_motion_x_no_collision,
+      new_motion_y_no_collision );
+
+    in_motion.set_location( move( new_motion_coordinates ) );
+
+    in_motion.get_physics_component().set_velocity(
+      make_unique<Vector2<Velocity>>( new_speed, 3 * M_PI_2 )
+      );  
+  }
 }

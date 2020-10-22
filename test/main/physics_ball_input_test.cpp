@@ -17,32 +17,9 @@ using std::vector;
 void run_while_no_collision(
   vector<unique_ptr<PhysicsBall>>& game_components,
   ScreenWindow& window,
-  unique_ptr<Engine>& engine)
-{
-  unique_ptr<PhysicsHandler> physics_handler = make_unique<PhysicsHandler>();
+  unique_ptr<Engine>& engine);
 
-  Uint32 begin = SDL_GetTicks();
-  Uint32 now = begin;
-  while( now - begin < 8000 )
-  {
-    now = SDL_GetTicks();
-
-    if( engine -> peek_has_updated() )
-    {
-      physics_handler -> handle_collision(
-      *game_components.at( 0 ),
-      *game_components.at( 1 ) );
-    }
-    
-    for( auto& component : game_components )
-    {
-      component -> update_screen_position( window );
-    }
-    engine -> advance( game_components );        
-  }
-}
-
-TEST_CASE( "test physics ball collision" )
+TEST_CASE( "test physics ball input" )
 {
   int width = 500;
   int height = 500;
@@ -86,7 +63,7 @@ TEST_CASE( "test physics ball collision" )
   PhysicsBall& first_ball_handle = *first_ball;
 
   unique_ptr<PhysicsBall> second_ball = make_unique<PhysicsBall>(
-    make_unique<WorldCoordinates>( 0, 300 ),
+    make_unique<WorldCoordinates>( 100, 300 ),
     move( second_ball_physics_component ),
     move( second_ball_sprite )
     );
@@ -110,50 +87,13 @@ TEST_CASE( "test physics ball collision" )
   engine -> set_screen_window( move( screen_window ) );
   engine -> set_current_scroll( 0 );
 
-  SECTION( "First physics component collision test: gravity" )
+  SECTION( "First physics component collision test: input playground" )
   {
     float ball_mass = 10;
     float time_elapsed = 0;
 
-    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-    first_physics.consider( move( gravity ) );
-
-    first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
-                                 });
-
-    run_while_no_collision( game_components, window, engine );    
-  }
-
-  SECTION( "First physics component collision test: gravity with screen motion" )
-  {
-    float ball_mass = 10;
-    float time_elapsed = 0;
-
-    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-
-    first_physics.consider( move( gravity ) );
-
-    engine -> set_current_scroll( -1 );
-
-    first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
-                                 });
-
-    run_while_no_collision( game_components, window, engine );    
-  }
-
-  SECTION( "First physics component collision test: gravity, blocks not aligned" )
-  {
-    float ball_mass = 10;
-    float time_elapsed = 0;
-
-    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
-    first_physics.consider( move( gravity ) );
-
-    first_ball_handle.set_location( make_unique<WorldCoordinates>( 7, 0 ) );
+    first_ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
+    first_ball_handle.mark_controllable();
 
     first_ball_handle.on_update( [&] {
                                    time_elapsed += .01;

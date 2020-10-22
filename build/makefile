@@ -7,7 +7,7 @@ OBJ_FILES = engine.o game_renderer.o easy_sdl.o sprite.o point.o input_event.o i
 world_coordinates.o screen_coordinates.o screen_window.o physics_component.o physics_handler.o \
 physics_ball.o
 TEST_OBJ_FILES = test_driver.o vector2_test.o physics_ball_test.o \
-physics_ball_collision_test.o
+physics_ball_collision_test.o physics_ball_input_test.o
 VPATH = ../src/main:../src/main/input:../src/main/physics:../test/main
 
 all: Allengine tests cscope

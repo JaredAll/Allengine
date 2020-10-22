@@ -36,6 +36,11 @@ void InputHandler::determine_input()
         current_input_type = InputType::down;
       }
 
+      if( up_arrow( e ) )
+      {
+        current_input_type = InputType::up;
+      }
+
       if( enter( e ) )
       {
         current_input_type = InputType::enter;
@@ -90,6 +95,11 @@ bool InputHandler::left_arrow( SDL_Event e )
 bool InputHandler::down_arrow( SDL_Event e )
 {
   return e.key.keysym.sym == SDLK_DOWN;
+}
+
+bool InputHandler::up_arrow( SDL_Event e )
+{
+  return e.key.keysym.sym == SDLK_UP;
 }
 
 bool InputHandler::enter( SDL_Event e )

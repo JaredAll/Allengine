@@ -52,7 +52,7 @@ unique_ptr<Displacement_v> PhysicsComponent::advance( float delta_t )
   acceleration = make_unique<Acceleration_v>( sum_forces -> get_magnitude() / mass,
                                               sum_forces -> get_theta() );
 
-  unique_ptr<Displacement_v> velocity_displacement = velocity -> integrate( delta_t, 1 );
+  unique_ptr<Displacement_v> velocity_displacement = velocity -> integrate( delta_t );
   unique_ptr<Displacement_v> acceleration_displacement = acceleration -> integrate_2( delta_t );
 
   unique_ptr<Displacement_v> change_in_displacement =
@@ -105,6 +105,16 @@ void PhysicsComponent::set_location( unique_ptr<WorldCoordinates> coordinates )
   
   location = make_unique<WorldCoordinates>( coordinates -> get_world_x(),
                                             coordinates -> get_world_y() );
+}
+
+void PhysicsComponent::set_velocity( unique_ptr<Vector2<Velocity>> new_velocity )
+{
+  velocity = move( new_velocity );
+}
+
+Vector2<Velocity>& PhysicsComponent::get_velocity()
+{
+  return *velocity;
 }
 
 WorldCoordinates& PhysicsComponent::get_location()

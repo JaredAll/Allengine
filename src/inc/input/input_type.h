@@ -9,7 +9,8 @@ enum class InputType
   enter,
   romeo,  
   escape,  
-  none
+  none,
+  up
 };
 
 #endif

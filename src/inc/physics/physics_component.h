@@ -6,6 +6,7 @@
 #include "vector2.h"
 #include "world_coordinates.h"
 #include <vector>
+#include "world_coordinates.h"
 
 class PhysicsComponent
 {
@@ -26,6 +27,10 @@ public:
   WorldCoordinates& get_location();
 
   void set_location( std::unique_ptr<WorldCoordinates> coordinates );
+
+  void set_velocity( std::unique_ptr<Vector2<Velocity>> velocity );
+
+  Vector2<Velocity>& get_velocity();
 
 private:
 

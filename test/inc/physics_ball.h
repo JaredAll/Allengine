@@ -2,7 +2,10 @@
 #define PHYSICS_BALL
 
 #include "game_component.h"
+#include "input_event.h"
 #include "physics_component.h"
+#include "sprite.h"
+#include "test_component.h"
 #include "sprite.h"
 #include "test_component.h"
 
@@ -25,6 +28,10 @@ public:
 
   int get_height() override;
 
+  void update() override;
+
+  void update( InputEvent& event ) override;
+
   void set_physics_component( std::unique_ptr<PhysicsComponent> physics_component );
 
   PhysicsComponent& get_physics_component();
@@ -33,8 +40,11 @@ public:
 
   void set_location( std::unique_ptr<WorldCoordinates> new_location ) override;
 
+  void mark_controllable();
+
 private:
 
+  bool controllable;
   std::vector<std::unique_ptr<Sprite>> render_components;
   std::unique_ptr<PhysicsComponent> physics_component;
 
