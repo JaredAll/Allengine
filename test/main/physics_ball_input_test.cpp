@@ -44,6 +44,7 @@ TEST_CASE( "test physics ball input" )
 {
   int width = 500;
   int height = 500;
+  float delta_t = 2;
 
   std::unique_ptr<Engine> engine = std::make_unique<Engine>();
   engine -> initialize( width, height );
@@ -101,10 +102,46 @@ TEST_CASE( "test physics ball input" )
     first_ball_handle.mark_controllable();
 
     first_ball_handle.on_update( [&] {
-      time_elapsed += .01;
-      first_physics.advance( time_elapsed );
+      first_physics.advance( delta_t );
     });
 
-    run_for_duration( game_components, window, engine, 8000 );
+    run_for_duration( game_components, window, engine, 10000 );
+  }
+
+  SECTION( "First physics component collision test: ground bounce" )
+  {
+    float ball_mass = 10;
+    float time_elapsed = 0;
+
+    unique_ptr<Sprite> ground_sprite = make_unique<Sprite>(
+      make_unique<WorldCoordinates>( 0, 0 ),
+      500,
+      500,
+      renderer.create_texture( "/home/jared/Games/Tetris/resources/s.png" )
+      );
+
+    unique_ptr<PhysicsComponent> ground_physics_component =
+      make_unique<PhysicsComponent>( ball_mass, true );
+
+    unique_ptr<PhysicsBall> ground = make_unique<PhysicsBall>(
+      make_unique<WorldCoordinates>( 0, 400 ),
+      move( ground_physics_component ),
+      move( ground_sprite )
+      );
+
+    game_components.push_back( move( ground ) );
+
+    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
+
+    first_physics.consider( move( gravity ) );
+
+    first_ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
+    first_ball_handle.mark_controllable();
+
+    first_ball_handle.on_update( [&] {
+      first_physics.advance( delta_t );
+    });
+
+    run_while_no_collision( game_components, window, engine );
   }
 }

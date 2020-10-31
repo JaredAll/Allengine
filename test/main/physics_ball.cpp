@@ -65,10 +65,12 @@ void PhysicsBall::update( InputEvent& event )
   else if( event.left_up() )
   {
     direction = M_PI;
+    speed = 3;
   }
   else if( event.right_up() )
   {
     direction = 0;
+    speed = 3;
   }
   else if( event.up_up() )
   {

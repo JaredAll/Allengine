@@ -42,10 +42,11 @@ void run_while_no_collision(
   }
 }
 
-TEST_CASE( "test physics ball collision", "[.]" )
+TEST_CASE( "test physics ball collision" )
 {
   int width = 500;
   int height = 500;
+  float delta_t = 2;
 
   std::unique_ptr<Engine> engine = std::make_unique<Engine>();
   engine -> initialize( width, height );
@@ -113,14 +114,12 @@ TEST_CASE( "test physics ball collision", "[.]" )
   SECTION( "First physics component collision test: gravity" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
     first_physics.consider( move( gravity ) );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
+                                   first_physics.advance( delta_t );
                                  });
 
     run_while_no_collision( game_components, window, engine );    
@@ -129,7 +128,6 @@ TEST_CASE( "test physics ball collision", "[.]" )
   SECTION( "First physics component collision test: gravity with screen motion" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
 
@@ -138,8 +136,7 @@ TEST_CASE( "test physics ball collision", "[.]" )
     engine -> set_current_scroll( -1 );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
+                                   first_physics.advance( delta_t );
                                  });
 
     run_while_no_collision( game_components, window, engine );    
@@ -148,7 +145,6 @@ TEST_CASE( "test physics ball collision", "[.]" )
   SECTION( "First physics component collision test: gravity, blocks not aligned" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
     first_physics.consider( move( gravity ) );
@@ -156,8 +152,7 @@ TEST_CASE( "test physics ball collision", "[.]" )
     first_ball_handle.set_location( make_unique<WorldCoordinates>( 7, 0 ) );
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
+                                   first_physics.advance( delta_t );
                                  });
 
     run_while_no_collision( game_components, window, engine );    

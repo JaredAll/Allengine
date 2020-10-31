@@ -89,8 +89,6 @@ void PhysicsComponent::freeze()
 
   acceleration -> set_magnitude( 0 );
   acceleration -> set_theta( 0 );
-
-  forces.clear();
 }
 
 void PhysicsComponent::set_location( unique_ptr<WorldCoordinates> coordinates )

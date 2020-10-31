@@ -44,6 +44,7 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 {
   int width = 500;
   int height = 500;
+  float delta_t = 2;
 
   std::unique_ptr<Engine> engine = std::make_unique<Engine>();
   engine -> initialize( width, height );
@@ -148,7 +149,6 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "First physics component test: gravity" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> physics_component =
       make_unique<PhysicsComponent>( ball_mass, false );
@@ -161,9 +161,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     ball_handle.on_update( [&]
                            {
-                             time_elapsed += .01;
                              unique_ptr<Vector2<Displacement>> displacement =
-                               physics_component -> advance( time_elapsed );
+                               physics_component -> advance( delta_t );
                              shift_ball_x_y(
                                ball_handle,
                                displacement -> get_x_component_magnitude(),
@@ -178,7 +177,6 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "physics component test: gravity and normality" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> physics_component = 
       make_unique<PhysicsComponent>( ball_mass, false );
@@ -193,9 +191,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     ball_handle.on_update( [&]
                            {
-                             time_elapsed += .01;
                              unique_ptr<Vector2<Displacement>> displacement =
-                               physics_component -> advance( time_elapsed );
+                               physics_component -> advance( delta_t );
                              shift_ball_x_y(
                                ball_handle,
                                displacement -> get_x_component_magnitude(),
@@ -210,7 +207,6 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "physics component test: force against screen movement" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> physics_component =
       make_unique<PhysicsComponent>( ball_mass, false );
@@ -223,9 +219,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     ball_handle.on_update( [&]
                            {
-                             time_elapsed += .01;
                              unique_ptr<Vector2<Displacement>> displacement =
-                               physics_component -> advance( time_elapsed );
+                               physics_component -> advance( delta_t );
                              shift_ball_x_y(
                                ball_handle,
                                displacement -> get_x_component_magnitude(),
@@ -240,7 +235,6 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "physics component test: force changes" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> physics_component =
       make_unique<PhysicsComponent>( ball_mass, false );
@@ -260,9 +254,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     ball_handle.on_update( [&]
                            {
-                             time_elapsed += .01;
                              unique_ptr<Vector2<Displacement>> displacement =
-                               physics_component -> advance( time_elapsed );
+                               physics_component -> advance( delta_t );
                              shift_ball_x_y(
                                ball_handle,
                                displacement -> get_x_component_magnitude(),
@@ -277,7 +270,6 @@ TEST_CASE( "world to screen projection successful", "[.]" )
   SECTION( "physics component test: spring force" )
   {
     float ball_mass = 10;
-    float time_elapsed = 0;
 
     unique_ptr<PhysicsComponent> physics_component = 
       make_unique<PhysicsComponent>( ball_mass, false );
@@ -297,9 +289,8 @@ TEST_CASE( "world to screen projection successful", "[.]" )
 
     ball_handle.on_update( [&]
                            {
-                             time_elapsed += .1;
                              unique_ptr<Vector2<Displacement>> displacement =
-                               physics_component -> advance( time_elapsed );
+                               physics_component -> advance( delta_t );
                              shift_ball_x_y(
                                ball_handle,
                                displacement -> get_x_component_magnitude(),
