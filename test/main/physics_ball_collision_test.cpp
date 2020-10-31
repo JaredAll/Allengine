@@ -42,7 +42,7 @@ void run_while_no_collision(
   }
 }
 
-TEST_CASE( "test physics ball collision" )
+TEST_CASE( "test physics ball collision", "[.]" )
 {
   int width = 500;
   int height = 500;

@@ -19,6 +19,27 @@ void run_while_no_collision(
   ScreenWindow& window,
   unique_ptr<Engine>& engine);
 
+void run_for_duration(
+  vector<unique_ptr<PhysicsBall>>& game_components,
+  ScreenWindow& window,
+  unique_ptr<Engine>& engine,
+  int milliseconds )
+{
+  unique_ptr<PhysicsHandler> physics_handler = make_unique<PhysicsHandler>();
+
+  Uint32 begin = SDL_GetTicks();
+  Uint32 now = begin;
+  while( now - begin < 8000 )
+  {
+    now = SDL_GetTicks();
+    for( auto& component : game_components )
+    {
+      component -> update_screen_position( window );
+    }
+    engine -> advance( game_components );        
+  }
+}
+
 TEST_CASE( "test physics ball input" )
 {
   int width = 500;
@@ -36,23 +57,12 @@ TEST_CASE( "test physics ball input" )
     renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
     );
 
-  unique_ptr<Sprite> second_ball_sprite = make_unique<Sprite>(
-    make_unique<WorldCoordinates>( 0, 0 ),
-    10,
-    10,
-    renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
-    );
-
   float ball_mass = 10;
 
   unique_ptr<PhysicsComponent> first_ball_physics_component =
     make_unique<PhysicsComponent>( ball_mass, false );
 
-  unique_ptr<PhysicsComponent> second_ball_physics_component =
-    make_unique<PhysicsComponent>( ball_mass, true );
-
   PhysicsComponent& first_physics = *first_ball_physics_component;
-  PhysicsComponent& second_physics = *second_ball_physics_component;
 
   unique_ptr<PhysicsBall> first_ball = make_unique<PhysicsBall>(
     make_unique<WorldCoordinates>( 0, 0 ),
@@ -62,17 +72,8 @@ TEST_CASE( "test physics ball input" )
 
   PhysicsBall& first_ball_handle = *first_ball;
 
-  unique_ptr<PhysicsBall> second_ball = make_unique<PhysicsBall>(
-    make_unique<WorldCoordinates>( 100, 300 ),
-    move( second_ball_physics_component ),
-    move( second_ball_sprite )
-    );
-
-  PhysicsBall& second_ball_handle = *second_ball;
-
   vector<unique_ptr<PhysicsBall>> game_components;
   game_components.push_back( move( first_ball ) );
-  game_components.push_back( move( second_ball ) );
 
   unique_ptr<WorldCoordinates> upper_left_corner = make_unique<WorldCoordinates>( 0, 0 );
   unique_ptr<WorldCoordinates> lower_right_corner = make_unique<WorldCoordinates>( width, height );
@@ -92,14 +93,18 @@ TEST_CASE( "test physics ball input" )
     float ball_mass = 10;
     float time_elapsed = 0;
 
+    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
+
+    first_physics.consider( move( gravity ) );
+
     first_ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
     first_ball_handle.mark_controllable();
 
     first_ball_handle.on_update( [&] {
-                                   time_elapsed += .01;
-                                   first_physics.advance( time_elapsed );
-                                 });
+      time_elapsed += .01;
+      first_physics.advance( time_elapsed );
+    });
 
-    run_while_no_collision( game_components, window, engine );    
+    run_for_duration( game_components, window, engine, 8000 );
   }
 }
