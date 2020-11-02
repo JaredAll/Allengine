@@ -99,7 +99,7 @@ void PhysicsBall::set_location( std::unique_ptr<WorldCoordinates> new_location )
   physics_component -> set_location( move( new_location ) );
 }
 
-WorldCoordinates& PhysicsBall::get_location()
+WorldCoordinates& PhysicsBall::get_location() const
 {
   return physics_component -> get_location();
 }

@@ -60,12 +60,12 @@ ScreenCoordinates const& Sprite::get_screen_location() const
   return *screen_location;
 }
 
-int Sprite::get_h()
+int Sprite::get_h() const
 {
   return destination -> h;
 }
 
-int Sprite::get_w()
+int Sprite::get_w() const
 {
   return destination -> w;
 }

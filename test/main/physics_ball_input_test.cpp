@@ -89,24 +89,24 @@ TEST_CASE( "test physics ball input" )
   engine -> set_screen_window( move( screen_window ) );
   engine -> set_current_scroll( 0 );
 
-  SECTION( "First physics component collision test: input playground" )
-  {
-    float ball_mass = 10;
-    float time_elapsed = 0;
+  // SECTION( "First physics component collision test: input playground" )
+  // {
+  //   float ball_mass = 10;
+  //   float time_elapsed = 0;
 
-    unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
+  //   unique_ptr<Vector2<Force>> gravity = make_unique<Vector2<Force>>( 1, M_PI_2 );
 
-    first_physics.consider( move( gravity ) );
+  //   first_physics.consider( move( gravity ) );
 
-    first_ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
-    first_ball_handle.mark_controllable();
+  //   first_ball_handle.set_location( make_unique<WorldCoordinates>( height / 2, width / 2 ) );
+  //   first_ball_handle.mark_controllable();
 
-    first_ball_handle.on_update( [&] {
-      first_physics.advance( delta_t );
-    });
+  //   first_ball_handle.on_update( [&] {
+  //     first_physics.advance( delta_t );
+  //   });
 
-    run_for_duration( game_components, window, engine, 10000 );
-  }
+  //   run_for_duration( game_components, window, engine, 10000 );
+  // }
 
   SECTION( "First physics component collision test: ground bounce" )
   {

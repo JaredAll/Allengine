@@ -36,7 +36,7 @@ public:
 
   PhysicsComponent& get_physics_component();
 
-  WorldCoordinates& get_location() override;
+  WorldCoordinates& get_location() const override;
 
   void set_location( std::unique_ptr<WorldCoordinates> new_location ) override;
 

@@ -31,9 +31,9 @@ public:
   
   void set_destination( std::shared_ptr<SDL_Rect> destination );
   
-  int get_h();
+  int get_h() const;
   
-  int get_w();
+  int get_w() const;
 
   WorldCoordinates const& get_world_offset() const;
 

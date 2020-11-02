@@ -24,9 +24,9 @@ public:
 
   virtual void set_destination( std::shared_ptr<SDL_Rect> destination ) = 0;
 
-  virtual int get_h() = 0;
+  virtual int get_h() const = 0;
 
-  virtual int get_w() = 0;
+  virtual int get_w() const = 0;
 
   virtual WorldCoordinates const& get_world_offset() const = 0;
 

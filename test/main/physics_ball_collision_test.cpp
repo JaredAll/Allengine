@@ -23,7 +23,8 @@ void run_while_no_collision(
 
   Uint32 begin = SDL_GetTicks();
   Uint32 now = begin;
-  while( now - begin < 8000 )
+  // while( now - begin < 8000 )
+  while( true )
   {
     now = SDL_GetTicks();
 
@@ -42,7 +43,7 @@ void run_while_no_collision(
   }
 }
 
-TEST_CASE( "test physics ball collision" )
+TEST_CASE( "test physics ball collision", "[.]" )
 {
   int width = 500;
   int height = 500;

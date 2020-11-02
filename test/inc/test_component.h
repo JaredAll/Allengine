@@ -53,7 +53,7 @@ public:
   {
   }
 
-  virtual WorldCoordinates& get_location() override
+  virtual WorldCoordinates& get_location() const override
   {
     return *origin;
   }
@@ -63,8 +63,8 @@ public:
     for( auto& render_component : get_render_components() )
       {
         std::unique_ptr<ScreenCoordinates> screen_location = window.project( 
-          *( render_component -> get_world_offset() +
-             get_location() )
+          *render_component,
+          get_location()
           );
 
         render_component -> set_screen_location(

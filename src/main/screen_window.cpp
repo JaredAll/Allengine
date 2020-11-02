@@ -1,5 +1,6 @@
 #include "screen_window.h"
 #include "game_component.h"
+#include "render_component.h"
 #include "world_coordinates.h"
 #include <memory>
 #include <iostream>
@@ -15,18 +16,26 @@ ScreenWindow::ScreenWindow( unique_ptr<WorldCoordinates> upper_left_corner_param
   lower_right_corner = move( lower_right_corner_param );
 }
 
-unique_ptr<ScreenCoordinates> ScreenWindow::project( WorldCoordinates const& coordinates )
+unique_ptr<ScreenCoordinates> ScreenWindow::project( RenderComponent const& component,
+                                                     WorldCoordinates const& location )
 {
+  unique_ptr<WorldCoordinates> coordinates = component.get_world_offset() + location;
+
   int upper_left_x = upper_left_corner -> get_world_x();
   int lower_right_x = lower_right_corner -> get_world_x();
-  int input_x = coordinates.get_world_x();
+  int input_x = coordinates -> get_world_x();
 
   int upper_left_y = upper_left_corner -> get_world_y();
   int lower_right_y = lower_right_corner -> get_world_y();
-  int input_y = coordinates.get_world_y();
+  int input_y = coordinates -> get_world_y();
 
-  bool visible = input_x >= upper_left_x && input_x <= lower_right_x
-    && input_y >= upper_left_y && input_y <= lower_right_y;
+  int top_right_x = input_x + component.get_w();
+
+  bool visible =
+    ( input_x >= upper_left_x && input_x <= lower_right_x
+      && input_y >= upper_left_y && input_y <= lower_right_y ) ||
+    ( top_right_x >= upper_left_x && top_right_x <= lower_right_x
+      && input_y >= upper_left_y && input_y <= lower_right_y );
 
   int input_screen_projection_x = 0;
   int input_screen_projection_y = 0;

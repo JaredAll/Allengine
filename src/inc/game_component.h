@@ -29,7 +29,7 @@ public:
 
   virtual void set_location( std::unique_ptr<WorldCoordinates> new_location ) = 0;
 
-  virtual WorldCoordinates& get_location() = 0;
+  virtual WorldCoordinates& get_location() const = 0;
 
   virtual void update_screen_position( ScreenWindow& window ) = 0;
 
