@@ -74,6 +74,7 @@ private:
       if( component -> accepting_input() )
       {
         component -> update( input_event );
+        window -> focus( *component );
       }
     }
     has_updated = true;

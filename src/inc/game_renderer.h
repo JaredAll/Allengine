@@ -1,9 +1,11 @@
 #ifndef JAREDALL_TETRIS_GAME_RENDERER_H
 #define JAREDALL_TETRIS_GAME_RENDERER_H
 
+#include "SDL_render.h"
 #include "cleanup.h"
 #include "game_component.h"
 #include "render_component.h"
+#include <memory>
 #include <type_traits>
 #include <vector>
 #include <SDL.h>
@@ -12,6 +14,7 @@
 #include <iostream>
 #include <SDL_image.h>
 #include "easy_sdl.h"
+#include <map>
 
 template< typename, typename = std::void_t<>>
 struct IsRenderableT : std::false_type
@@ -78,8 +81,8 @@ private:
   }
 
   std::unique_ptr<SDL_Window, SDL_Window_Destroyer> window;
-
   std::unique_ptr<SDL_Renderer, SDL_Renderer_Destroyer> renderer;
+  std::map<std::string, std::shared_ptr<SDL_Texture>> textures;
 };
 
 #endif

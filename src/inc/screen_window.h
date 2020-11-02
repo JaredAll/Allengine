@@ -8,6 +8,8 @@
 #include <functional>
 #include <memory>
 
+class GameComponent;
+
 class ScreenWindow
 {
 public:
@@ -18,6 +20,8 @@ public:
   std::unique_ptr<ScreenCoordinates> project( WorldCoordinates const& coordinates );
 
   void scroll_x( int displacement );
+
+  void focus( GameComponent& component );
 
 private:
 

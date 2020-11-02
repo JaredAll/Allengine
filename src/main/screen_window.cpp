@@ -1,4 +1,5 @@
 #include "screen_window.h"
+#include "game_component.h"
 #include "world_coordinates.h"
 #include <memory>
 #include <iostream>
@@ -48,4 +49,21 @@ void ScreenWindow::scroll_x( int displacement )
 
   upper_left_corner = *upper_left_corner + *scroll_offset;
   lower_right_corner = *lower_right_corner + *scroll_offset;
+}
+
+void ScreenWindow::focus( GameComponent& component )
+{
+  int half_window_width = ( lower_right_corner -> get_world_x() -
+                            upper_left_corner -> get_world_x() ) / 2;
+  
+  unique_ptr<WorldCoordinates> lower_right_shift = make_unique<WorldCoordinates>(
+    component.get_location().get_world_x() + half_window_width,
+    lower_right_corner -> get_world_y() );
+
+  unique_ptr<WorldCoordinates> upper_left_shift = make_unique<WorldCoordinates>(
+    component.get_location().get_world_x() - half_window_width,
+    upper_left_corner -> get_world_y() );
+
+  lower_right_corner = move( lower_right_shift );
+  upper_left_corner = move( upper_left_shift );
 }

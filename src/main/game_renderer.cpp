@@ -4,7 +4,11 @@
 #include "cleanup.h"
 #include "render_component.h"
 
-using namespace std;
+using std::unique_ptr;
+using std::shared_ptr;
+using std::string;
+using std::cout;
+using std::endl;
 
 GameRenderer::GameRenderer( unique_ptr<SDL_Window, SDL_Window_Destroyer> win )
 {
@@ -23,10 +27,23 @@ GameRenderer::GameRenderer( unique_ptr<SDL_Window, SDL_Window_Destroyer> win )
 
 shared_ptr<SDL_Texture> GameRenderer::create_texture( string image_path )
 {
-  shared_ptr<SDL_Texture> texture {
-    loadTexture( image_path, renderer.get() ),
-    SDL_Texture_Destroyer()
-  };
+  shared_ptr<SDL_Texture> texture {};
+
+  std::map<string, shared_ptr<SDL_Texture>>::iterator iterator;
+  iterator = textures.find( image_path );
+  if( iterator != textures.end() )
+  {
+    texture = (*iterator).second;
+  }
+  else
+  {
+    texture = {
+      loadTexture( image_path, renderer.get() ),
+      SDL_Texture_Destroyer()
+    };
+    textures.insert( make_pair( image_path, texture ) );
+  }
+  
   return texture;
 }
 
@@ -35,7 +52,7 @@ shared_ptr<SDL_Texture> GameRenderer::render_letter_texture( TTF_Font* font,
                                                              SDL_Color color )
 {
   shared_ptr<SDL_Surface> letter_surface { TTF_RenderText_Solid( font, letter_singleton, color ),
-                                           SDL_Surface_Destroyer() };
+    SDL_Surface_Destroyer() };
   
   shared_ptr<SDL_Texture> letter_texture {
     SDL_CreateTextureFromSurface( renderer.get(), letter_surface.get() ),
