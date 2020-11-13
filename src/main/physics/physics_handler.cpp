@@ -6,6 +6,7 @@
 
 using std::make_unique;
 using std::unique_ptr;
+using std::vector;
 
 bool PhysicsHandler::detect_collision( PhysicsBall& first, PhysicsBall& second )
 {
@@ -45,6 +46,17 @@ void PhysicsHandler::handle_collision( PhysicsBall& first, PhysicsBall& second )
     else
     {
       handle_collision_inertial( second, first );
+    }
+  }
+}
+
+void PhysicsHandler::handle_collisions( vector<unique_ptr<PhysicsBall>>& components )
+{
+  for( size_t i = 0; i < components.size() - 1; i++ )
+  {
+    for( size_t j = i + 1; j < components.size(); j++ )
+    {
+      handle_collision( *components.at( i ), *components.at( j ) );
     }
   }
 }

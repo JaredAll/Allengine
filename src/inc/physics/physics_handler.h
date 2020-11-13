@@ -13,6 +13,8 @@ public:
 
   void handle_collision( PhysicsBall& first, PhysicsBall& second );
 
+  void handle_collisions( std::vector<std::unique_ptr<PhysicsBall>>& components );
+
 private:
 
   void handle_collision_inertial( PhysicsBall& inertial, PhysicsBall& in_motion );

@@ -30,9 +30,7 @@ void run_while_no_collision(
 
     if( engine -> peek_has_updated() )
     {
-      physics_handler -> handle_collision(
-      *game_components.at( 0 ),
-      *game_components.at( 1 ) );
+      physics_handler -> handle_collisions( game_components );
     }
     
     for( auto& component : game_components )
