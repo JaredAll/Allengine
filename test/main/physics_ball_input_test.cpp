@@ -57,7 +57,7 @@ TEST_CASE( "test physics ball input" )
     make_unique<WorldCoordinates>( 0, 0 ),
     10,
     10,
-    renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
+    renderer.create_texture( "/home/jared/Games/Allengine/resources/j.png" )
     );
 
   float ball_mass = 10;
@@ -120,7 +120,7 @@ TEST_CASE( "test physics ball input" )
     PhysicsBallInput ground_1_input {
       500,
       500,
-      "/home/jared/Games/Tetris/resources/s.png",
+      "/home/jared/Games/Allengine/resources/s.png",
       0,
       450,
       ball_mass,
@@ -132,7 +132,7 @@ TEST_CASE( "test physics ball input" )
     PhysicsBallInput ground_2_input {
       500,
       500,
-      "/home/jared/Games/Tetris/resources/s.png",
+      "/home/jared/Games/Allengine/resources/s.png",
       700,
       400,
       ball_mass,
@@ -144,7 +144,7 @@ TEST_CASE( "test physics ball input" )
     PhysicsBallInput ground_3_input {
       500,
       500,
-      "/home/jared/Games/Tetris/resources/s.png",
+      "/home/jared/Games/Allengine/resources/s.png",
       -700,
       300,
       ball_mass,

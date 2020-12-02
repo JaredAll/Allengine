@@ -56,14 +56,14 @@ TEST_CASE( "test physics ball collision", "[.]" )
     make_unique<WorldCoordinates>( 0, 0 ),
     10,
     10,
-    renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
+    renderer.create_texture( "/home/jared/Games/Allengine/resources/j.png" )
     );
 
   unique_ptr<Sprite> second_ball_sprite = make_unique<Sprite>(
     make_unique<WorldCoordinates>( 0, 0 ),
     10,
     10,
-    renderer.create_texture( "/home/jared/Games/Tetris/resources/j.png" )
+    renderer.create_texture( "/home/jared/Games/Allengine/resources/j.png" )
     );
 
   float ball_mass = 10;
