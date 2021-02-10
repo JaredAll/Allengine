@@ -9,6 +9,8 @@
 #include "screen_coordinates.h"
 #include "screen_window.h"
 
+class GameRenderer;
+
 class GameComponent
 {
 public:
@@ -32,6 +34,8 @@ public:
   virtual WorldCoordinates& get_location() const = 0;
 
   virtual void update_screen_position( ScreenWindow& window ) = 0;
+
+  virtual void accept_renderer( GameRenderer& renderer ) = 0;
 
 protected:
 

@@ -40,6 +40,8 @@ public:
 
   void set_location( std::unique_ptr<WorldCoordinates> new_location ) override;
 
+  void accept_renderer( GameRenderer& renderer ) override;
+
   void mark_controllable();
 
 private:

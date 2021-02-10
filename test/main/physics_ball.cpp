@@ -1,6 +1,7 @@
 #include "physics_ball.h"
 #include "game_component.h"
 #include "physics_component.h"
+#include "game_renderer.h"
 #include <cmath>
 #include <memory>
 
@@ -97,6 +98,11 @@ void PhysicsBall::set_physics_component( std::unique_ptr<PhysicsComponent> new_p
 void PhysicsBall::set_location( std::unique_ptr<WorldCoordinates> new_location )
 {
   physics_component -> set_location( move( new_location ) );
+}
+
+void PhysicsBall::accept_renderer( GameRenderer& renderer )
+{
+  renderer.render_all( render_components );
 }
 
 WorldCoordinates& PhysicsBall::get_location() const

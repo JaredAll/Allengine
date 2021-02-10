@@ -73,6 +73,10 @@ public:
       }
   }
 
+  virtual void accept_renderer( GameRenderer& renderer ) override
+  {
+  }
+
 protected:
 
     std::function<void()> update_delegate;
