@@ -23,16 +23,8 @@ renderer. The `advance` function template is used to advance the game
 for a single frame, and is SFINAE'd away if called with a vector of
 anything other than `GameComponents`. The instantiation for that type
 also includes the instantiation for the private methods
-`render_components` and `update_components`; the
-`GameRenderer::render` function template only requires that the
-template argument "is renderable", ie, has a `get_render_components()`
-method. This is the only specialization for this template, so a call
-to the renderer with a class that does not meet that requirement will
-cause a compilation error. The requirement itself is verified using a
-tag dispatch; a struct is created that either extends
-`std::false_type` or `std::true_type` based upon whether or not the
-required method is present, and the `render` method is SFINAE'd
-accordingly.
+`render_components` and `update_components`; check out my blog,
+jaredall.dev, for a deeper explanation of the `Engine` architecture.
 
 ## Physics
 
